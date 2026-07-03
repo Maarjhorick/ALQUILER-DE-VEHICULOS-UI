@@ -1,0 +1,114 @@
+.hero {
+  min-height: 520px;
+  display: flex;
+  align-items: center;
+  padding: 72px 7vw;
+  color: white;
+  background:
+    linear-gradient(90deg, rgba(21, 61, 122, 0.86) 0%, rgba(21, 61, 122, 0.68) 36%, rgba(21, 61, 122, 0.08) 72%),
+    url("/images/hero-car-rental.png") center / cover no-repeat;
+}
+
+.hero-content {
+  max-width: 650px;
+}
+
+.eyebrow {
+  margin: 0 0 12px;
+  color: #f6c343;
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+h1 {
+  margin: 0;
+  color: #f6c343;
+  font-size: clamp(2.2rem, 5vw, 4.8rem);
+  line-height: 1.02;
+  font-weight: 900;
+}
+
+.hero-text {
+  max-width: 540px;
+  margin: 20px 0 0;
+  color: #f8fafc;
+  font-size: clamp(1.05rem, 2vw, 1.35rem);
+  line-height: 1.5;
+  font-weight: 600;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 30px;
+}
+
+.hero-actions a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 46px;
+  padding: 0 22px;
+  border-radius: 6px;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.primary-action {
+  background: #f6c343;
+  color: #1f2937;
+}
+
+.secondary-action {
+  border: 2px solid #f6c343;
+  color: #f6c343;
+}
+
+.quick-info {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  background: #f6c343;
+}
+
+.quick-info article {
+  display: grid;
+  gap: 8px;
+  padding: 28px 7vw;
+  background: #1f2937;
+}
+
+.quick-info strong {
+  color: #f6c343;
+  font-size: 1.05rem;
+}
+
+.quick-info span {
+  color: #f8fafc;
+  line-height: 1.45;
+}
+
+@media (max-width: 768px) {
+  .hero {
+    min-height: 500px;
+    padding: 58px 24px;
+    background:
+      linear-gradient(180deg, rgba(21, 61, 122, 0.84) 0%, rgba(21, 61, 122, 0.62) 54%, rgba(31, 41, 55, 0.86) 100%),
+      url("/images/hero-car-rental.png") center / cover no-repeat;
+  }
+
+  .hero-actions {
+    width: 100%;
+  }
+
+  .hero-actions a {
+    flex: 1 1 180px;
+  }
+
+  .quick-info {
+    grid-template-columns: 1fr;
+  }
+}
