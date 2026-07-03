@@ -1,29 +1,67 @@
-<mat-toolbar color="primary">
-
-    <span>PAUL CAR´S</span>
-
-    <span class="spacer"></span>
-
-    <a mat-button routerLink="/">Inicio</a>
-
-    <a mat-button routerLink="/vehiculos">
-        Vehículos
+<mat-toolbar color="primary" class="header-toolbar">
+    <a class="brand" routerLink="/" aria-label="Ir al inicio" (click)="closeMenu()">
+        <img src="images/logo.png" alt="Paul Car's alquiler de vehiculos" class="brand-logo">
     </a>
 
-    <a mat-button routerLink="/clientes">
+    <nav class="desktop-menu" aria-label="Menu principal">
+        <a mat-button routerLink="/" (click)="closeMenu()">Inicio</a>
+
+        <a mat-button routerLink="/vehiculos" (click)="closeMenu()">
+            Vehiculos
+        </a>
+
+        <a mat-button routerLink="/clientes" (click)="closeMenu()">
+            Clientes
+        </a>
+
+        <a mat-button routerLink="/alquileres" (click)="closeMenu()">
+            Alquileres
+        </a>
+
+        <a mat-button routerLink="/nosotros" (click)="closeMenu()">
+            Nosotros
+        </a>
+
+        <a mat-button routerLink="/contactanos" (click)="closeMenu()">
+            Contacto
+        </a>
+    </nav>
+
+    <button
+        mat-icon-button
+        class="menu-toggle"
+        type="button"
+        aria-label="Abrir menu"
+        [attr.aria-expanded]="isMenuOpen"
+        (click)="toggleMenu()">
+        <mat-icon>{{ isMenuOpen ? 'close' : 'menu' }}</mat-icon>
+    </button>
+</mat-toolbar>
+
+<nav class="mobile-menu" [class.open]="isMenuOpen" aria-label="Menu principal movil">
+    <div class="mobile-menu-logo">
+        <img src="images/logo.png" alt="Paul Car's alquiler de vehiculos">
+    </div>
+
+    <a mat-button routerLink="/" (click)="closeMenu()">Inicio</a>
+
+    <a mat-button routerLink="/vehiculos" (click)="closeMenu()">
+        Vehiculos
+    </a>
+
+    <a mat-button routerLink="/clientes" (click)="closeMenu()">
         Clientes
     </a>
 
-    <a mat-button routerLink="/alquileres">
+    <a mat-button routerLink="/alquileres" (click)="closeMenu()">
         Alquileres
     </a>
 
-    <a mat-button routerLink="/nosotros">
+    <a mat-button routerLink="/nosotros" (click)="closeMenu()">
         Nosotros
     </a>
 
-    <a mat-button routerLink="/contactanos">
+    <a mat-button routerLink="/contactanos" (click)="closeMenu()">
         Contacto
     </a>
-
-</mat-toolbar>
+</nav>
