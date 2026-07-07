@@ -8,7 +8,24 @@ import { ListarVehiculosComponent } from '../feature/vehiculos/listar-vehiculos/
 import { ListarClientesComponent } from '../feature/clientes/listar-clientes/listar-clientes.component';
 import { ListarAlquileresComponent } from '../feature/alquileres/listar-alquileres/listar-alquileres.component';
 
+import { LoginComponent } from '../feature/auth/login/login.component';
+import { authGuard } from '../core/guard/auth.guard';
+
+import { DashboardEmpleadoComponent } from '../feature/empleado/dashboard-empleado/dashboard-empleado.component';
+
+import { SolicitarCuentaComponent } from '../feature/auth/solicitar-cuenta/solicitar-cuenta.component';
+
 export const routes: Routes = [
+  {
+    path: 'login',
+    component: LoginComponent
+  },
+
+  {
+    path: 'solicitar-cuenta',
+    component: SolicitarCuentaComponent
+  },
+
   {
     path: '',
     component: MainLayoutComponent,
@@ -19,16 +36,29 @@ export const routes: Routes = [
         component: HomeComponent
       },
       {
+      path: 'empleado',
+      component: DashboardEmpleadoComponent,
+      //ACTIVAR DESPUES
+      //canActivate: [authGuard],
+      //data: { roles: ['ADMIN', 'EMPLEADO'] }
+      },
+      {
         path: 'vehiculos',
-        component: ListarVehiculosComponent
+        component: ListarVehiculosComponent,
+        //canActivate: [authGuard],
+        //data: { roles: ['ADMIN', 'EMPLEADO'] }
       },
       {
         path: 'clientes',
-        component: ListarClientesComponent
+        component: ListarClientesComponent,
+        //canActivate: [authGuard],
+        data: { roles: ['ADMIN', 'EMPLEADO'] }
       },
       {
         path: 'alquileres',
-        component: ListarAlquileresComponent
+        component: ListarAlquileresComponent,
+        //canActivate: [authGuard],
+        //data: { roles: ['ADMIN', 'EMPLEADO'] }
       },
 
       {

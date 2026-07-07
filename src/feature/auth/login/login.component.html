@@ -1,1 +1,88 @@
-<p>login works!</p>
+<section class="login-page">
+  <header class="login-header">
+    <a routerLink="/" class="brand">
+      <span class="brand-icon">🚘</span>
+      <span>Paul Car's</span>
+    </a>
+
+    <a routerLink="/" class="back-link">
+      Volver al inicio
+    </a>
+  </header>
+
+  <main class="login-content">
+    <section class="login-card">
+      <div class="login-icon">
+        <mat-icon>directions_car</mat-icon>
+      </div>
+
+      <h1>Alquiler de Vehículos</h1>
+      <p>Inicia sesión para gestionar vehículos, clientes y alquileres.</p>
+
+      <form [formGroup]="loginForm" (ngSubmit)="iniciarSesion()">
+        <mat-form-field appearance="outline">
+          <mat-label>Correo o Usuario</mat-label>
+          <input matInput type="text" formControlName="email" autocomplete="username">
+
+         <!-- @if (loginForm.controls.email.hasError('required')) {
+            <mat-error>El correo es obligatorio.</mat-error>
+        }-->
+
+          @if (loginForm.controls.email.hasError('email')) {
+            <mat-error>Ingresa un correo válido.</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Contraseña</mat-label>
+
+          <input
+            matInput
+            [type]="ocultarPassword ? 'password' : 'text'"
+            formControlName="password"
+            autocomplete="current-password"
+          >
+
+          <button
+            mat-icon-button
+            matSuffix
+            type="button"
+            aria-label="Mostrar u ocultar contraseña"
+            (click)="ocultarPassword = !ocultarPassword"
+          >
+            <mat-icon>{{ ocultarPassword ? 'visibility' : 'visibility_off' }}</mat-icon>
+          </button>
+
+          @if (loginForm.controls.password.hasError('required')) {
+            <mat-error>La contraseña es obligatoria.</mat-error>
+          }
+
+          @if (loginForm.controls.password.hasError('minlength')) {
+            <mat-error>Debe tener al menos 6 caracteres.</mat-error>
+          }
+        </mat-form-field>
+
+        @if (error) {
+          <p class="error-message">{{ error }}</p>
+        }
+
+        <button class="login-button" mat-flat-button type="submit" [disabled]="cargando">
+          @if (cargando) {
+            <mat-spinner diameter="22"></mat-spinner>
+          } @else {
+            Iniciar sesión
+          }
+        </button>
+      </form>
+
+      <p class="register-text">
+        ¿No tienes cuenta?
+        <a routerLink="/solicitar-cuenta">Solicita una cuenta al administrador</a>
+      </p>
+    </section>
+  </main>
+
+  <footer class="login-footer">
+    © 2026 Paul Car's - Sistema de alquiler de vehículos
+  </footer>
+</section>
