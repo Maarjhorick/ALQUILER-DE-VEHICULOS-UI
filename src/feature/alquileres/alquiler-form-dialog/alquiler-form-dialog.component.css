@@ -1,0 +1,59 @@
+.alquiler-dialog {
+  width: min(560px, 100%);
+}
+
+h2[mat-dialog-title] {
+  margin: 0;
+  color: #111827;
+  font-size: 21px;
+  font-weight: 800;
+}
+
+.full,
+mat-form-field {
+  width: 100%;
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 16px;
+}
+
+.error-texto {
+  margin: -8px 0 12px;
+  color: #c0392b;
+  font-size: 13px;
+}
+
+.total-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 8px;
+  padding: 14px 18px;
+  border-radius: 12px;
+  background: #e8f1ff;
+  color: #0f172a;
+}
+
+.total-box span {
+  font-size: 14px;
+  color: #1565c0;
+  font-weight: 600;
+}
+
+.total-box strong {
+  font-size: 22px;
+  color: #0f172a;
+}
+
+mat-dialog-actions {
+  padding: 12px 0 4px;
+}
+
+@media (max-width: 520px) {
+  .grid-2 {
+    grid-template-columns: 1fr;
+  }
+}

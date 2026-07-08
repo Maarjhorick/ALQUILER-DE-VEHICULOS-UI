@@ -1,9 +1,54 @@
-<h1>Sistema de Alquiler de Vehículos</h1>
+<section class="home-page">
+  <section class="hero">
+    <div class="hero-copy">
+      <p class="eyebrow">Paul Car's</p>
+      <h1>Alquila el vehículo perfecto para tu próximo viaje</h1>
+      <p class="description">
+        Encuentra autos, SUVs y camionetas disponibles al mejor precio, con un
+        proceso de reserva simple y seguro.
+      </p>
 
-<nav>
-  <a routerLink="/">Inicio</a> |
-  <a routerLink="/nosotros">Nosotros</a> |
-  <a routerLink="/contactanos">Contacto</a>
-</nav>
+      <div class="hero-actions">
+        <a mat-flat-button color="primary" routerLink="/catalogo">
+          <mat-icon>directions_car</mat-icon>
+          Ver vehículos
+        </a>
+        <a mat-stroked-button color="primary" routerLink="/login">
+          Iniciar sesión
+        </a>
+      </div>
+    </div>
 
-<p>Bienvenido al sistema de alquiler de vehículos PAUL CAR'S</p>
+    <div class="hero-icon">
+      <mat-icon>directions_car</mat-icon>
+    </div>
+  </section>
+
+  <section class="features">
+    <mat-card class="feature-card">
+      <mat-icon>garage</mat-icon>
+      <h2>Amplia flota</h2>
+      <p>Sedanes, SUVs, camionetas y furgonetas disponibles según lo que necesites.</p>
+    </mat-card>
+
+    <mat-card class="feature-card">
+      <mat-icon>bolt</mat-icon>
+      <h2>Reservas rápidas</h2>
+      <p>Elige tus fechas y confirma tu alquiler en minutos, sin trámites complicados.</p>
+    </mat-card>
+
+    <mat-card class="feature-card">
+      <mat-icon>support_agent</mat-icon>
+      <h2>Atención personalizada</h2>
+      <p>Nuestro equipo te acompaña antes, durante y después de tu alquiler.</p>
+    </mat-card>
+  </section>
+
+  <section class="cta">
+    <div>
+      <h2>¿Tienes dudas sobre nuestros servicios?</h2>
+      <p>Escríbenos y te responderemos a la brevedad.</p>
+    </div>
+    <a mat-flat-button color="primary" routerLink="/contactanos">Contáctanos</a>
+  </section>
+</section>

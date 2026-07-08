@@ -19,7 +19,7 @@ export class AuthService {
   private readonly usuarioSignal = signal<UsuarioSesion | null>(this.getStoredUser());
 
   readonly usuarioActual = computed(() => this.usuarioSignal());
-  readonly estaAutenticado = computed(() => !!this.getToken());
+  readonly estaAutenticado = computed(() => !!this.usuarioSignal());
   readonly rolActual = computed(() => this.usuarioSignal()?.rol ?? null);
 
   login(credentials: LoginRequest): Observable<LoginResponse> {
@@ -45,11 +45,11 @@ export class AuthService {
   );
 }
 
-  logout(): void {
+  logout(redirectTo: string = '/login'): void {
     localStorage.removeItem(this.tokenKey);
     localStorage.removeItem(this.userKey);
     this.usuarioSignal.set(null);
-    this.router.navigate(['/login']);
+    this.router.navigate([redirectTo]);
   }
 
   getToken(): string | null {

@@ -1,5 +1,5 @@
 <mat-toolbar class="main-header">
-  <a routerLink="/" class="brand">
+  <a class="brand" (click)="irAInicio()">
     <span class="brand-mark">
       <mat-icon>directions_car</mat-icon>
     </span>
@@ -12,7 +12,7 @@
 
   <span class="spacer"></span>
 
-  @if (authService.estaAutenticado()) {
+  @if (mostrarMenuAutenticado()) {
     <nav class="desktop-nav">
       <a mat-button routerLink="/vehiculos">Vehículos</a>
       <a mat-button routerLink="/clientes">Clientes</a>
@@ -86,11 +86,8 @@
     </mat-menu>
   } @else {
     <nav class="desktop-nav public-nav">
-      <a mat-button routerLink="/">Inicio</a>
-      <a mat-button routerLink="/vehiculos">Vehículos</a>
       <a mat-button routerLink="/nosotros">Nosotros</a>
       <a mat-button routerLink="/contactanos">Contacto</a>
-      <a mat-button routerLink="/login">Iniciar sesión</a>
     </nav>
 
     <button
@@ -103,8 +100,6 @@
     </button>
 
     <mat-menu #publicMobileMenu="matMenu">
-      <a mat-menu-item routerLink="/">Inicio</a>
-      <a mat-menu-item routerLink="/vehiculos">Vehículos</a>
       <a mat-menu-item routerLink="/nosotros">Nosotros</a>
       <a mat-menu-item routerLink="/contactanos">Contacto</a>
       <a mat-menu-item routerLink="/login">Iniciar sesión</a>

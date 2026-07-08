@@ -55,17 +55,25 @@ export class LoginComponent {
 
     this.authService.login(this.loginForm.getRawValue()).subscribe({
       next: ({ usuario }) => {
-  if (usuario.rol === 'EMPLEADO') {
-    this.router.navigate(['/empleado']);
-    return;
-  }
+        const destino = usuario.rol === 'EMPLEADO' ? '/empleado' : '/';
 
-  this.router.navigate(['/']);
-},
-error: () => {
-  this.error = 'Solo puedes ingresar usando EMPLEADO como usuario.';
-  this.cargando = false;
-}
+        this.router.navigate([destino]).then((exito) => {
+          this.cargando = false;
+
+          if (!exito) {
+            console.error('La navegación a', destino, 'no se completó. Revisa la consola arriba por errores.');
+            this.error = 'No se pudo abrir el panel. Revisa la consola del navegador (F12).';
+          }
+        }).catch((err) => {
+          this.cargando = false;
+          console.error('Error de navegación:', err);
+          this.error = 'Ocurrió un error al abrir el panel.';
+        });
+      },
+      error: () => {
+        this.error = 'Solo puedes ingresar usando EMPLEADO como usuario.';
+        this.cargando = false;
+      }
     });
   }
 }
