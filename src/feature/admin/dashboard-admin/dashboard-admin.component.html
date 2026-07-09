@@ -1,0 +1,59 @@
+<section class="admin-page">
+  <div class="admin-hero">
+    <div>
+      <p class="eyebrow">Panel administrativo</p>
+      <h1>Control general del negocio</h1>
+      <p class="description">
+        Supervisa la operacion, revisa indicadores y accede a las areas que luego se conectaran con usuarios, reportes y tablas maestras.
+      </p>
+    </div>
+
+    <a mat-flat-button color="primary" routerLink="/alquileres">
+      <mat-icon>assignment_add</mat-icon>
+      Nuevo alquiler
+    </a>
+  </div>
+
+  <section class="summary-grid">
+    <mat-card class="summary-card">
+      <mat-icon>directions_car</mat-icon>
+      <span>Vehiculos</span>
+      <strong>{{ vehiculos() }}</strong>
+    </mat-card>
+
+    <mat-card class="summary-card">
+      <mat-icon>groups</mat-icon>
+      <span>Clientes</span>
+      <strong>{{ clientes() }}</strong>
+    </mat-card>
+
+    <mat-card class="summary-card">
+      <mat-icon>pending_actions</mat-icon>
+      <span>Alquileres activos</span>
+      <strong>{{ alquileresActivos() }}</strong>
+    </mat-card>
+  </section>
+
+  <section class="admin-grid">
+    <mat-card class="admin-card">
+      <mat-icon>badge</mat-icon>
+      <h2>Usuarios y roles</h2>
+      <p>Base preparada para administrar empleados, clientes y permisos del sistema.</p>
+      <button mat-stroked-button color="primary" type="button">Proximamente</button>
+    </mat-card>
+
+    <mat-card class="admin-card">
+      <mat-icon>monitoring</mat-icon>
+      <h2>Reportes</h2>
+      <p>Espacio para ingresos, alquileres por periodo, flota mas usada y pagos pendientes.</p>
+      <button mat-stroked-button color="primary" type="button">Proximamente</button>
+    </mat-card>
+
+    <mat-card class="admin-card">
+      <mat-icon>tune</mat-icon>
+      <h2>Catalogos base</h2>
+      <p>Marcas, modelos, combustibles, tipos de vehiculo y estados del negocio.</p>
+      <button mat-stroked-button color="primary" type="button">Proximamente</button>
+    </mat-card>
+  </section>
+</section>

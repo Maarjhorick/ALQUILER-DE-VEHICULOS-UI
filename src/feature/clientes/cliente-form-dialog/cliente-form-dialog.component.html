@@ -1,0 +1,75 @@
+<div class="cliente-dialog">
+  <h2 mat-dialog-title>{{ esEdicion ? 'Editar cliente' : 'Nuevo cliente' }}</h2>
+
+  <form [formGroup]="form" (ngSubmit)="guardar()">
+    <mat-dialog-content>
+      <div class="grid-2">
+        <mat-form-field appearance="outline">
+          <mat-label>Nombres</mat-label>
+          <input matInput formControlName="nombres" placeholder="Marjhorick">
+          @if (form.controls.nombres.hasError('required') && form.controls.nombres.touched) {
+            <mat-error>Los nombres son obligatorios.</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Apellidos</mat-label>
+          <input matInput formControlName="apellidos" placeholder="Ventura">
+          @if (form.controls.apellidos.hasError('required') && form.controls.apellidos.touched) {
+            <mat-error>Los apellidos son obligatorios.</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <div class="grid-2">
+        <mat-form-field appearance="outline">
+          <mat-label>DNI</mat-label>
+          <input matInput formControlName="dni" placeholder="71234567" maxlength="8">
+          @if (form.controls.dni.hasError('required') && form.controls.dni.touched) {
+            <mat-error>El DNI es obligatorio.</mat-error>
+          }
+          @if (form.controls.dni.hasError('pattern') && form.controls.dni.touched) {
+            <mat-error>El DNI debe tener 8 dígitos.</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Teléfono</mat-label>
+          <input matInput formControlName="telefono" placeholder="987654321" maxlength="9">
+          @if (form.controls.telefono.hasError('required') && form.controls.telefono.touched) {
+            <mat-error>El teléfono es obligatorio.</mat-error>
+          }
+          @if (form.controls.telefono.hasError('pattern') && form.controls.telefono.touched) {
+            <mat-error>Ingresa 9 dígitos válidos.</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <mat-form-field appearance="outline" class="full">
+        <mat-label>Correo electrónico</mat-label>
+        <input matInput type="email" formControlName="email" placeholder="cliente@correo.com">
+        @if (form.controls.email.hasError('required') && form.controls.email.touched) {
+          <mat-error>El correo es obligatorio.</mat-error>
+        }
+        @if (form.controls.email.hasError('email') && form.controls.email.touched) {
+          <mat-error>Ingresa un correo válido.</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full">
+        <mat-label>Dirección</mat-label>
+        <input matInput formControlName="direccion" placeholder="Av. Ejemplo 123, Lima">
+        @if (form.controls.direccion.hasError('required') && form.controls.direccion.touched) {
+          <mat-error>La dirección es obligatoria.</mat-error>
+        }
+      </mat-form-field>
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end">
+      <button mat-stroked-button type="button" (click)="cancelar()">Cancelar</button>
+      <button mat-flat-button color="primary" type="submit">
+        {{ esEdicion ? 'Guardar cambios' : 'Registrar cliente' }}
+      </button>
+    </mat-dialog-actions>
+  </form>
+</div>

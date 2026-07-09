@@ -1,155 +1,150 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule, NgForm } from '@angular/forms';
+import { NgClass } from '@angular/common';
+import { Component, computed, inject, signal } from '@angular/core';
 
-interface VehiculoDisponible {
-  id: number;
-  nombre: string;
-  categoria: string;
-  imagen: string;
-  precioDia: number;
-  descuento: number;
-  transmision: string;
-  pasajeros: number;
-  maletas: number;
-  combustible: string;
-  caracteristicas: string[];
-  disponible: boolean;
-}
+import { MatButtonModule } from '@angular/material/button';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTableModule } from '@angular/material/table';
+import { MatTooltipModule } from '@angular/material/tooltip';
+
+import { Alquiler, EstadoAlquiler } from '../../../core/models/alquiler.model';
+import { AlquilerService } from '../../../core/service/alquiler.service';
+import {
+  ConfirmDialogComponent,
+  ConfirmDialogData
+} from '../../../shared/components/confirm-dialog/confirm-dialog.component';
+import { BackButtonComponent } from '../../../shared/components/back-button/back-button.component';
+import { AlquilerFormDialogComponent } from '../alquiler-form-dialog/alquiler-form-dialog.component';
+
+type FiltroEstado = 'TODOS' | EstadoAlquiler;
 
 @Component({
   selector: 'app-listar-alquileres',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [
+    NgClass,
+    MatButtonModule,
+    MatChipsModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatInputModule,
+    MatSnackBarModule,
+    MatTableModule,
+    MatTooltipModule,
+    BackButtonComponent
+  ],
   templateUrl: './listar-alquileres.component.html',
   styleUrl: './listar-alquileres.component.css'
 })
 export class ListarAlquileresComponent {
-  pasoActual = 1;
-  pasosCompletados = {
-    ubicacion: false,
-    vehiculo: false,
-    cliente: false
-  };
+  private readonly alquilerService = inject(AlquilerService);
+  private readonly dialog = inject(MatDialog);
+  private readonly snackBar = inject(MatSnackBar);
 
-  reserva = {
-    fechaRecojo: '',
-    horaRecojo: '',
-    fechaDevolucion: '',
-    horaDevolucion: '',
-    lugarRecojo: '',
-    lugarDevolucion: '',
-    vehiculoId: 0,
-    cobertura: 'basica',
-    extras: {
-      sillaBebe: false,
-      conductorAdicional: false,
-      gps: false
-    },
-    nombres: '',
-    apellidos: '',
-    documento: '',
-    licencia: '',
-    telefono: '',
-    correo: '',
-    direccion: '',
-    comentarios: '',
-    aceptaTerminos: false
-  };
+  readonly columnas = ['cliente', 'vehiculo', 'fechas', 'total', 'estado', 'acciones'];
+  readonly busqueda = signal('');
+  readonly filtroEstado = signal<FiltroEstado>('TODOS');
+  readonly alquileres = this.alquilerService.alquileres;
 
-  reservaRegistrada = false;
+  readonly alquileresFiltrados = computed(() => {
+    const texto = this.busqueda().trim().toLowerCase();
+    const estado = this.filtroEstado();
 
-  vehiculosDisponibles: VehiculoDisponible[] = [
-    {
-      id: 1,
-      nombre: 'Toyota Corolla 2024',
-      categoria: 'Auto sedan',
-      imagen: 'images/hero-car-rental.png',
-      precioDia: 145,
-      descuento: 12,
-      transmision: 'Automatica',
-      pasajeros: 5,
-      maletas: 2,
-      combustible: 'Gasolina',
-      caracteristicas: ['Aire acondicionado', 'Camara de retroceso', 'Bluetooth', 'Seguro incluido'],
-      disponible: true
-    },
-    {
-      id: 2,
-      nombre: 'Hyundai Tucson 2024',
-      categoria: 'SUV familiar',
-      imagen: 'images/hero-car-rental.png',
-      precioDia: 210,
-      descuento: 8,
-      transmision: 'Automatica',
-      pasajeros: 5,
-      maletas: 4,
-      combustible: 'Gasolina',
-      caracteristicas: ['Control de estabilidad', 'Pantalla tactil', 'Sensores de parqueo', 'Asientos amplios'],
-      disponible: true
-    },
-    {
-      id: 3,
-      nombre: 'Toyota Hilux 2023',
-      categoria: 'Pickup',
-      imagen: 'images/hero-car-rental.png',
-      precioDia: 260,
-      descuento: 10,
-      transmision: 'Mecanica',
-      pasajeros: 5,
-      maletas: 5,
-      combustible: 'Diesel',
-      caracteristicas: ['Doble cabina', 'Traccion 4x4', 'Tolva amplia', 'Ideal para rutas exigentes'],
-      disponible: true
-    }
-  ];
-
-  get vehiculoSeleccionado(): VehiculoDisponible | undefined {
-    return this.vehiculosDisponibles.find(vehiculo => vehiculo.id === this.reserva.vehiculoId);
-  }
-
-  irAlPaso(paso: number): void {
-    if (paso === 1 || (paso === 2 && this.pasosCompletados.ubicacion) || (paso === 3 && this.pasosCompletados.vehiculo)) {
-      this.pasoActual = paso;
-    }
-  }
-
-  confirmarUbicacion(form: NgForm): void {
-    if (form.invalid) {
-      return;
-    }
-
-    this.pasosCompletados.ubicacion = true;
-    this.pasoActual = 2;
-  }
-
-  seleccionarVehiculo(vehiculo: VehiculoDisponible): void {
-    if (!vehiculo.disponible) {
-      return;
-    }
-
-    this.reserva.vehiculoId = vehiculo.id;
-  }
-
-  confirmarVehiculo(form: NgForm): void {
-    if (form.invalid || !this.reserva.vehiculoId) {
-      return;
-    }
-
-    this.pasosCompletados.vehiculo = true;
-    this.pasoActual = 3;
-  }
-
-  registrarReserva(): void {
-    if (!this.reserva.aceptaTerminos) {
-      return;
-    }
-
-    this.pasosCompletados.cliente = true;
-    this.reservaRegistrada = true;
-    console.log('Reserva lista para enviar a la API:', {
-      ...this.reserva,
-      vehiculo: this.vehiculoSeleccionado
+    return this.alquileres().filter((alquiler) => {
+      const coincideTexto =
+        !texto ||
+        `${alquiler.clienteNombre} ${alquiler.vehiculoNombre}`.toLowerCase().includes(texto);
+      const coincideEstado = estado === 'TODOS' || alquiler.estado === estado;
+      return coincideTexto && coincideEstado;
     });
+  });
+
+  buscar(valor: string): void {
+    this.busqueda.set(valor);
+  }
+
+  filtrarPorEstado(estado: FiltroEstado): void {
+    this.filtroEstado.set(estado);
+  }
+
+  abrirNuevo(): void {
+    const ref = this.dialog.open(AlquilerFormDialogComponent, {
+      width: '600px'
+    });
+
+    ref.afterClosed().subscribe((resultado) => {
+      if (!resultado) return;
+
+      this.alquilerService.agregar(resultado).subscribe(() => {
+        this.snackBar.open('Alquiler registrado correctamente', 'Cerrar', { duration: 2500 });
+      });
+    });
+  }
+
+  finalizar(alquiler: Alquiler): void {
+    const data: ConfirmDialogData = {
+      titulo: 'Finalizar alquiler',
+      mensaje: `Marcar como finalizado el alquiler de ${alquiler.clienteNombre}? El vehiculo quedara disponible nuevamente.`,
+      textoConfirmar: 'Finalizar'
+    };
+
+    const ref = this.dialog.open(ConfirmDialogComponent, { data, width: '420px' });
+
+    ref.afterClosed().subscribe((confirmado) => {
+      if (!confirmado) return;
+
+      this.alquilerService.cambiarEstado(alquiler.id, 'FINALIZADO');
+      this.snackBar.open('Alquiler finalizado', 'Cerrar', { duration: 2500 });
+    });
+  }
+
+  cancelar(alquiler: Alquiler): void {
+    const data: ConfirmDialogData = {
+      titulo: 'Cancelar alquiler',
+      mensaje: `Seguro que deseas cancelar el alquiler de ${alquiler.clienteNombre}?`,
+      textoConfirmar: 'Cancelar alquiler'
+    };
+
+    const ref = this.dialog.open(ConfirmDialogComponent, { data, width: '420px' });
+
+    ref.afterClosed().subscribe((confirmado) => {
+      if (!confirmado) return;
+
+      this.alquilerService.cambiarEstado(alquiler.id, 'CANCELADO');
+      this.snackBar.open('Alquiler cancelado', 'Cerrar', { duration: 2500 });
+    });
+  }
+
+  eliminar(alquiler: Alquiler): void {
+    const data: ConfirmDialogData = {
+      titulo: 'Eliminar alquiler',
+      mensaje: `Deseas eliminar el registro del alquiler de ${alquiler.clienteNombre}? Esta accion no se puede deshacer.`
+    };
+
+    const ref = this.dialog.open(ConfirmDialogComponent, { data, width: '420px' });
+
+    ref.afterClosed().subscribe((confirmado) => {
+      if (!confirmado) return;
+
+      this.alquilerService.eliminar(alquiler.id).subscribe(() => {
+        this.snackBar.open('Alquiler eliminado', 'Cerrar', { duration: 2500 });
+      });
+    });
+  }
+
+  claseEstado(estado: EstadoAlquiler): string {
+    switch (estado) {
+      case 'ACTIVO':
+        return 'estado-activo';
+      case 'FINALIZADO':
+        return 'estado-finalizado';
+      default:
+        return 'estado-cancelado';
+    }
   }
 }
