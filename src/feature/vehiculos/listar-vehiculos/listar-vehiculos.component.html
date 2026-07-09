@@ -1,50 +1,94 @@
-<section class="catalog-hero">
-  <span>Catalogo de autos</span>
-  <h1>Vehiculos disponibles</h1>
-  <p>Vista preparada para consumir el catalogo desde la base de datos: foto, descuento, categoria, precio y caracteristicas.</p>
-</section>
+<section class="page">
+  <app-back-button></app-back-button>
 
-<section class="catalog-section">
-  <div class="category-bar" aria-label="Categorias">
-    <button type="button" *ngFor="let categoria of categorias">
-      <i class="fa-solid fa-tag" aria-hidden="true"></i>
-      {{ categoria }}
+  <div class="page-header">
+    <div>
+      <p class="eyebrow">Gestion de flota</p>
+      <h1>Vehiculos</h1>
+      <p class="description">Consulta la disponibilidad y administra la informacion de la flota.</p>
+    </div>
+
+    <button mat-flat-button color="primary" (click)="abrirNuevo()">
+      <mat-icon>add_circle</mat-icon>
+      Nuevo vehiculo
     </button>
   </div>
 
-  <div class="catalog-grid">
-    <article class="vehicle-card" *ngFor="let vehiculo of vehiculos">
-      <div class="vehicle-image">
-        <img [src]="vehiculo.imagen" [alt]="vehiculo.nombre">
-        <span class="discount">-{{ vehiculo.descuento }}%</span>
-        <span class="category">{{ vehiculo.categoria }}</span>
+  <div class="toolbar">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Buscar por marca, modelo o placa</mat-label>
+      <input matInput (input)="buscar($any($event.target).value)" placeholder="Ej: Toyota, Yaris, ABC-123">
+      <mat-icon matPrefix>search</mat-icon>
+    </mat-form-field>
+
+    <mat-chip-listbox aria-label="Filtrar por estado" (change)="filtrarPorEstado($any($event.value))" [value]="filtroEstado()">
+      <mat-chip-option value="TODOS">Todos</mat-chip-option>
+      <mat-chip-option value="DISPONIBLE">Disponibles</mat-chip-option>
+      <mat-chip-option value="ALQUILADO">Alquilados</mat-chip-option>
+      <mat-chip-option value="MANTENIMIENTO">Mantenimiento</mat-chip-option>
+    </mat-chip-listbox>
+  </div>
+
+  <div class="table-card">
+    <table mat-table [dataSource]="vehiculosFiltrados()">
+      <ng-container matColumnDef="vehiculo">
+        <th mat-header-cell *matHeaderCellDef>Vehiculo</th>
+        <td mat-cell *matCellDef="let v">
+          <div class="vehiculo-cell">
+            <span class="vehiculo-icon"><mat-icon>directions_car</mat-icon></span>
+            <strong>{{ v.marca }} {{ v.modelo }}</strong>
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="placa">
+        <th mat-header-cell *matHeaderCellDef>Placa</th>
+        <td mat-cell *matCellDef="let v">{{ v.placa }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="tipo">
+        <th mat-header-cell *matHeaderCellDef>Tipo</th>
+        <td mat-cell *matCellDef="let v">{{ v.tipo }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="anio">
+        <th mat-header-cell *matHeaderCellDef>Anio</th>
+        <td mat-cell *matCellDef="let v">{{ v.anio }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="precio">
+        <th mat-header-cell *matHeaderCellDef>Precio/dia</th>
+        <td mat-cell *matCellDef="let v">S/ {{ v.precioPorDia }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="estado">
+        <th mat-header-cell *matHeaderCellDef>Estado</th>
+        <td mat-cell *matCellDef="let v">
+          <span class="badge" [ngClass]="claseEstado(v.estado)">{{ v.estado }}</span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="acciones">
+        <th mat-header-cell *matHeaderCellDef class="acciones-header">Acciones</th>
+        <td mat-cell *matCellDef="let v" class="acciones-cell">
+          <button mat-icon-button matTooltip="Editar" (click)="editar(v)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button matTooltip="Eliminar" color="warn" (click)="eliminar(v)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="columnas"></tr>
+      <tr mat-row *matRowDef="let row; columns: columnas;"></tr>
+    </table>
+
+    @if (vehiculosFiltrados().length === 0) {
+      <div class="empty-state">
+        <mat-icon>directions_car_filled</mat-icon>
+        <p>No se encontraron vehiculos con los filtros seleccionados.</p>
       </div>
-
-      <div class="vehicle-body">
-        <div class="vehicle-title">
-          <h2>{{ vehiculo.nombre }}</h2>
-          <strong>S/ {{ vehiculo.precioDia }} <small>/ dia</small></strong>
-        </div>
-
-        <ul class="vehicle-meta">
-          <li><i class="fa-solid fa-gears" aria-hidden="true"></i> {{ vehiculo.transmision }}</li>
-          <li><i class="fa-solid fa-user-group" aria-hidden="true"></i> {{ vehiculo.pasajeros }} pasajeros</li>
-          <li><i class="fa-solid fa-suitcase" aria-hidden="true"></i> {{ vehiculo.maletas }} maletas</li>
-          <li><i class="fa-solid fa-gas-pump" aria-hidden="true"></i> {{ vehiculo.combustible }}</li>
-        </ul>
-
-        <div class="feature-list">
-          <span *ngFor="let caracteristica of vehiculo.caracteristicas">
-            <i class="fa-solid fa-check" aria-hidden="true"></i>
-            {{ caracteristica }}
-          </span>
-        </div>
-
-        <a routerLink="/alquileres" class="reserve-link">
-          <i class="fa-solid fa-calendar-check" aria-hidden="true"></i>
-          Reservar este auto
-        </a>
-      </div>
-    </article>
+    }
   </div>
 </section>

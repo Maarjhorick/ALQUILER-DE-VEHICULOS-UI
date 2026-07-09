@@ -1,77 +1,124 @@
-<mat-toolbar color="primary" class="header-toolbar">
-    <a class="brand" routerLink="/" aria-label="Ir al inicio" (click)="closeMenu()">
-        <img src="images/logo.png" alt="Paul Car's alquiler de vehiculos" class="brand-logo">
-    </a>
+<mat-toolbar class="main-header">
+  <button class="brand" type="button" (click)="irAInicio()" aria-label="Ir al inicio">
+    <img src="images/logo.png" alt="Paul Car's alquiler de vehiculos" class="brand-logo">
+  </button>
 
-    <nav class="desktop-menu" aria-label="Menu principal">
-        <a mat-button routerLink="/" (click)="closeMenu()">Inicio</a>
+  <span class="spacer"></span>
 
-        <a mat-button routerLink="/vehiculos" (click)="closeMenu()">
-            Vehiculos
-        </a>
+  @if (mostrarMenuAutenticado()) {
+    <nav class="desktop-nav" aria-label="Menu por rol">
+      <a mat-button [routerLink]="dashboardPrincipal()">Dashboard</a>
 
-        <a mat-button routerLink="/clientes" (click)="closeMenu()">
-            Clientes
-        </a>
+      @if (esCliente()) {
+        <a mat-button routerLink="/catalogo">Catalogo</a>
+        <a mat-button routerLink="/reservar">Reservar</a>
+      }
 
-        <a mat-button routerLink="/alquileres" (click)="closeMenu()">
-            Alquileres
-        </a>
+      @if (esEmpleado() || esAdmin()) {
+        <a mat-button routerLink="/vehiculos">Vehiculos</a>
+        <a mat-button routerLink="/clientes">Clientes</a>
+        <a mat-button routerLink="/alquileres">Alquileres</a>
+      }
 
-        <a mat-button routerLink="/nosotros" (click)="closeMenu()">
-            Nosotros
-        </a>
-
-        <a mat-button routerLink="/nosotros" fragment="contacto" (click)="closeMenu()">
-            Contacto
-        </a>
+      @if (esAdmin()) {
+        <a mat-button routerLink="/admin">Administracion</a>
+      }
     </nav>
 
-    <a class="reserve-cta desktop-reserve" routerLink="/alquileres" (click)="closeMenu()">
-        <i class="fa-solid fa-calendar-check" aria-hidden="true"></i>
-        Reservar ahora
-    </a>
+    @if (esEmpleado() || esAdmin()) {
+      <button mat-icon-button class="notification-button" aria-label="Notificaciones">
+        <mat-icon matBadge="9+" matBadgeColor="warn" matBadgeSize="small">notifications_none</mat-icon>
+      </button>
+    }
 
-    <button
-        mat-icon-button
-        class="menu-toggle"
-        type="button"
-        aria-label="Abrir menu"
-        [attr.aria-expanded]="isMenuOpen"
-        (click)="toggleMenu()">
-        <mat-icon>{{ isMenuOpen ? 'close' : 'menu' }}</mat-icon>
+    <div class="divider"></div>
+
+    <button mat-button class="profile-button" [matMenuTriggerFor]="profileMenu">
+      <span class="profile-greeting">
+        Hola, <strong>{{ authService.usuarioActual()?.nombres || 'Usuario' }}</strong>
+      </span>
+      <span class="avatar"><mat-icon>person</mat-icon></span>
+      <mat-icon class="arrow-icon">keyboard_arrow_down</mat-icon>
     </button>
+
+    <mat-menu #profileMenu="matMenu" xPosition="before">
+      <button mat-menu-item type="button" (click)="cerrarSesion()">
+        <mat-icon>logout</mat-icon>
+        <span>Cerrar sesion</span>
+      </button>
+    </mat-menu>
+
+    <button mat-icon-button class="mobile-menu-button" [matMenuTriggerFor]="mobileMenu" aria-label="Abrir menu">
+      <mat-icon>menu</mat-icon>
+    </button>
+
+    <mat-menu #mobileMenu="matMenu">
+      <a mat-menu-item [routerLink]="dashboardPrincipal()">
+        <mat-icon>dashboard</mat-icon>
+        <span>Dashboard</span>
+      </a>
+
+      @if (esCliente()) {
+        <a mat-menu-item routerLink="/catalogo">
+          <mat-icon>directions_car</mat-icon>
+          <span>Catalogo</span>
+        </a>
+        <a mat-menu-item routerLink="/reservar">
+          <mat-icon>calendar_month</mat-icon>
+          <span>Reservar</span>
+        </a>
+      }
+
+      @if (esEmpleado() || esAdmin()) {
+        <a mat-menu-item routerLink="/vehiculos">
+          <mat-icon>directions_car</mat-icon>
+          <span>Vehiculos</span>
+        </a>
+        <a mat-menu-item routerLink="/clientes">
+          <mat-icon>groups</mat-icon>
+          <span>Clientes</span>
+        </a>
+        <a mat-menu-item routerLink="/alquileres">
+          <mat-icon>assignment</mat-icon>
+          <span>Alquileres</span>
+        </a>
+      }
+
+      @if (esAdmin()) {
+        <a mat-menu-item routerLink="/admin">
+          <mat-icon>admin_panel_settings</mat-icon>
+          <span>Administracion</span>
+        </a>
+      }
+
+      <button mat-menu-item type="button" (click)="cerrarSesion()">
+        <mat-icon>logout</mat-icon>
+        <span>Cerrar sesion</span>
+      </button>
+    </mat-menu>
+  } @else {
+    <nav class="desktop-nav public-nav" aria-label="Menu publico">
+      <a mat-button routerLink="/">Inicio</a>
+      <a mat-button routerLink="/catalogo">Vehiculos</a>
+      <a mat-button routerLink="/nosotros">Nosotros</a>
+      <a mat-button routerLink="/nosotros" fragment="contacto">Contacto</a>
+    </nav>
+
+    <a mat-flat-button color="warn" class="reserve-cta" routerLink="/catalogo">
+      <mat-icon>calendar_month</mat-icon>
+      Reservar
+    </a>
+
+    <button mat-icon-button class="mobile-menu-button" [matMenuTriggerFor]="publicMobileMenu" aria-label="Abrir menu">
+      <mat-icon>menu</mat-icon>
+    </button>
+
+    <mat-menu #publicMobileMenu="matMenu">
+      <a mat-menu-item routerLink="/">Inicio</a>
+      <a mat-menu-item routerLink="/catalogo">Vehiculos</a>
+      <a mat-menu-item routerLink="/nosotros">Nosotros</a>
+      <a mat-menu-item routerLink="/nosotros" fragment="contacto">Contacto</a>
+      <a mat-menu-item routerLink="/login">Iniciar sesion</a>
+    </mat-menu>
+  }
 </mat-toolbar>
-
-<nav class="mobile-menu" [class.open]="isMenuOpen" aria-label="Menu principal movil">
-    <div class="mobile-menu-logo">
-        <img src="images/logo.png" alt="Paul Car's alquiler de vehiculos">
-    </div>
-
-    <a mat-button routerLink="/" (click)="closeMenu()">Inicio</a>
-
-    <a mat-button routerLink="/vehiculos" (click)="closeMenu()">
-        Vehiculos
-    </a>
-
-    <a mat-button routerLink="/clientes" (click)="closeMenu()">
-        Clientes
-    </a>
-
-    <a mat-button routerLink="/alquileres" (click)="closeMenu()">
-        Alquileres
-    </a>
-
-    <a mat-button routerLink="/nosotros" (click)="closeMenu()">
-        Nosotros
-    </a>
-
-    <a mat-button routerLink="/nosotros" fragment="contacto" (click)="closeMenu()">
-        Contacto
-    </a>
-
-    <a class="reserve-cta mobile-reserve" routerLink="/alquileres" (click)="closeMenu()">
-        <i class="fa-solid fa-calendar-check" aria-hidden="true"></i>
-        Reservar ahora
-    </a>
-</nav>

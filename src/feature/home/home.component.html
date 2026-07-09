@@ -1,31 +1,50 @@
-<section class="hero">
-  <div class="hero-content">
-    <p class="eyebrow">Alquiler de vehiculos</p>
-    <h1>Conduce con estilo, seguridad y comodidad</h1>
-    <p class="hero-text">
-      Autos modernos para viajes, negocios y rutas urbanas con atencion rapida y confiable.
-    </p>
+<section class="home-page">
+  <section class="hero">
+    <div class="hero-copy">
+      <p class="eyebrow">Paul Car's</p>
+      <h1>Alquila el vehiculo perfecto para tu proximo viaje</h1>
+      <p class="description">
+        Autos modernos para viajes, trabajo y rutas urbanas con atencion rapida,
+        precios claros y una flota lista para salir.
+      </p>
 
-    <div class="hero-actions">
-      <a routerLink="/vehiculos" class="primary-action">Ver vehiculos</a>
-      <a routerLink="/nosotros" fragment="contacto" class="secondary-action">Contactanos</a>
+      <div class="hero-actions">
+        <a mat-flat-button color="primary" routerLink="/catalogo">
+          <mat-icon>directions_car</mat-icon>
+          Ver vehiculos
+        </a>
+        <a mat-stroked-button color="primary" routerLink="/nosotros" fragment="contacto">
+          Contactanos
+        </a>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<section class="quick-info" aria-label="Beneficios">
-  <article>
-    <strong>Flota moderna</strong>
-    <span>Vehiculos listos para ciudad y carretera.</span>
-  </article>
+  <section class="quick-info" aria-label="Beneficios">
+    <article>
+      <mat-icon>garage</mat-icon>
+      <strong>Flota moderna</strong>
+      <span>Vehiculos listos para ciudad, carretera y trabajo.</span>
+    </article>
 
-  <article>
-    <strong>Reserva simple</strong>
-    <span>Encuentra opciones disponibles en minutos.</span>
-  </article>
+    <article>
+      <mat-icon>bolt</mat-icon>
+      <strong>Reserva simple</strong>
+      <span>Elige una opcion disponible y coordina tu alquiler en minutos.</span>
+    </article>
 
-  <article>
-    <strong>Atencion cercana</strong>
-    <span>Soporte para elegir el auto adecuado.</span>
-  </article>
+    <article>
+      <mat-icon>support_agent</mat-icon>
+      <strong>Atencion cercana</strong>
+      <span>Soporte para elegir el auto adecuado segun tu ruta.</span>
+    </article>
+  </section>
+
+  <section class="cta">
+    <div>
+      <h2>Listo para reservar?</h2>
+      <p>Revisa la flota disponible y solicita el vehiculo que necesitas.</p>
+    </div>
+    <a mat-flat-button color="primary" routerLink="/catalogo">Ver catalogo</a>
+  </section>
 </section>

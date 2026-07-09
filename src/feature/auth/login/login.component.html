@@ -1,1 +1,79 @@
-<p>login works!</p>
+<section class="login-page">
+  <header class="login-header">
+    <a routerLink="/" class="brand">
+      <span class="brand-icon">
+        <mat-icon>directions_car</mat-icon>
+      </span>
+      <span>Paul Car's</span>
+    </a>
+  </header>
+
+  <main class="login-content">
+    <section class="login-card">
+      <div class="login-icon">
+        <mat-icon>directions_car</mat-icon>
+      </div>
+
+      <h1>Alquiler de Vehiculos</h1>
+      <p>Inicia sesion segun tu rol para ver las opciones que corresponden.</p>
+
+      <form [formGroup]="loginForm" (ngSubmit)="iniciarSesion()">
+        <mat-form-field appearance="outline">
+          <mat-label>Correo o usuario</mat-label>
+          <input matInput type="text" formControlName="email" autocomplete="username">
+
+          @if (loginForm.controls.email.hasError('required')) {
+            <mat-error>El usuario es obligatorio.</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Contrasena</mat-label>
+
+          <input
+            matInput
+            [type]="ocultarPassword ? 'password' : 'text'"
+            formControlName="password"
+            autocomplete="current-password"
+          >
+
+          <button
+            mat-icon-button
+            matSuffix
+            type="button"
+            aria-label="Mostrar u ocultar contrasena"
+            (click)="ocultarPassword = !ocultarPassword"
+          >
+            <mat-icon>{{ ocultarPassword ? 'visibility' : 'visibility_off' }}</mat-icon>
+          </button>
+
+          @if (loginForm.controls.password.hasError('required')) {
+            <mat-error>La contrasena es obligatoria.</mat-error>
+          }
+        </mat-form-field>
+
+        @if (error) {
+          <p class="error-message">{{ error }}</p>
+        }
+
+        <button class="login-button" mat-flat-button type="submit" [disabled]="cargando">
+          @if (cargando) {
+            <mat-spinner diameter="22"></mat-spinner>
+          } @else {
+            Iniciar sesion
+          }
+        </button>
+      </form>
+
+      <p class="register-text">
+        Usuarios de prueba:
+        <strong>ADMIN</strong>, <strong>EMPLEADO</strong> o <strong>CLIENTE</strong>.
+        <a routerLink="/solicitar-cuenta">Solicita una cuenta al administrador</a>
+      </p>
+    </section>
+  </main>
+
+  <footer class="login-footer">
+    2026 Paul Car's - Sistema de alquiler de vehiculos
+  </footer>
+</section>

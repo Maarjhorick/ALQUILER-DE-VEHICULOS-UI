@@ -1,15 +1,19 @@
+.home-page {
+  background: #f8fafc;
+}
+
 .hero {
   min-height: 520px;
   display: flex;
   align-items: center;
   padding: 72px 7vw;
-  color: white;
+  color: #ffffff;
   background:
-    linear-gradient(90deg, rgba(21, 61, 122, 0.86) 0%, rgba(21, 61, 122, 0.68) 36%, rgba(21, 61, 122, 0.08) 72%),
+    linear-gradient(90deg, rgba(21, 61, 122, 0.88) 0%, rgba(21, 61, 122, 0.7) 38%, rgba(21, 61, 122, 0.12) 76%),
     url("/images/hero-car-rental.png") center / cover no-repeat;
 }
 
-.hero-content {
+.hero-copy {
   max-width: 650px;
 }
 
@@ -18,23 +22,22 @@
   color: #f6c343;
   font-size: 0.95rem;
   font-weight: 800;
-  letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
 h1 {
   margin: 0;
   color: #f6c343;
-  font-size: clamp(2.2rem, 5vw, 4.8rem);
-  line-height: 1.02;
+  font-size: clamp(2.2rem, 5vw, 4.6rem);
+  line-height: 1.04;
   font-weight: 900;
 }
 
-.hero-text {
-  max-width: 540px;
+.description {
+  max-width: 560px;
   margin: 20px 0 0;
   color: #f8fafc;
-  font-size: clamp(1.05rem, 2vw, 1.35rem);
+  font-size: clamp(1.05rem, 2vw, 1.28rem);
   line-height: 1.5;
   font-weight: 600;
 }
@@ -47,24 +50,13 @@ h1 {
 }
 
 .hero-actions a {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
   min-height: 46px;
   padding: 0 22px;
-  border-radius: 6px;
   font-weight: 800;
-  text-decoration: none;
 }
 
-.primary-action {
-  background: #f6c343;
-  color: #1f2937;
-}
-
-.secondary-action {
-  border: 2px solid #f6c343;
-  color: #f6c343;
+.hero-actions mat-icon {
+  margin-right: 6px;
 }
 
 .quick-info {
@@ -81,6 +73,10 @@ h1 {
   background: #1f2937;
 }
 
+.quick-info mat-icon {
+  color: #f6c343;
+}
+
 .quick-info strong {
   color: #f6c343;
   font-size: 1.05rem;
@@ -91,12 +87,36 @@ h1 {
   line-height: 1.45;
 }
 
+.cta {
+  width: min(1120px, calc(100% - 32px));
+  margin: 42px auto 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 28px 32px;
+  border-left: 6px solid #f6c343;
+  background: #ffffff;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+}
+
+.cta h2 {
+  margin: 0 0 6px;
+  color: #153d7a;
+  font-size: 1.45rem;
+}
+
+.cta p {
+  margin: 0;
+  color: #4b5563;
+}
+
 @media (max-width: 768px) {
   .hero {
     min-height: 500px;
     padding: 58px 24px;
     background:
-      linear-gradient(180deg, rgba(21, 61, 122, 0.84) 0%, rgba(21, 61, 122, 0.62) 54%, rgba(31, 41, 55, 0.86) 100%),
+      linear-gradient(180deg, rgba(21, 61, 122, 0.86) 0%, rgba(21, 61, 122, 0.66) 54%, rgba(31, 41, 55, 0.88) 100%),
       url("/images/hero-car-rental.png") center / cover no-repeat;
   }
 
@@ -110,5 +130,10 @@ h1 {
 
   .quick-info {
     grid-template-columns: 1fr;
+  }
+
+  .cta {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }
