@@ -1,138 +1,162 @@
 .home-page {
-  width: min(1180px, calc(100% - 32px));
-  margin: 0 auto;
-  padding: 48px 0 64px;
+  background: #f8fafc;
 }
 
 .hero {
+  min-height: 520px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 32px;
-  margin-bottom: 56px;
+  padding: 72px 7vw;
+  color: #ffffff;
+  background:
+    linear-gradient(90deg, rgba(21, 61, 122, 0.88) 0%, rgba(21, 61, 122, 0.7) 38%, rgba(21, 61, 122, 0.12) 76%),
+    url("/images/hero-car-rental.png") center / cover no-repeat;
 }
 
 .hero-copy {
-  max-width: 620px;
+  max-width: 650px;
 }
 
 .eyebrow {
-  margin: 0 0 8px;
-  color: #1565c0;
-  font-weight: 700;
+  margin: 0 0 12px;
+  color: #f6c343;
+  font-size: 0.95rem;
+  font-weight: 800;
   text-transform: uppercase;
-  font-size: 13px;
 }
 
 h1 {
   margin: 0;
-  color: #111827;
-  font-size: 40px;
-  font-weight: 800;
-  line-height: 1.2;
+  color: #f6c343;
+  font-size: clamp(2.2rem, 5vw, 4.6rem);
+  line-height: 1.04;
+  font-weight: 900;
 }
 
 .description {
-  margin: 16px 0 28px;
-  color: #667085;
-  font-size: 17px;
-  line-height: 1.6;
+  max-width: 560px;
+  margin: 20px 0 0;
+  color: #f8fafc;
+  font-size: clamp(1.05rem, 2vw, 1.28rem);
+  line-height: 1.5;
+  font-weight: 600;
 }
 
 .hero-actions {
   display: flex;
+  align-items: center;
+  flex-wrap: wrap;
   gap: 14px;
+  margin-top: 30px;
 }
 
 .hero-actions a[mat-flat-button],
 .hero-actions a[mat-stroked-button] {
-  height: 48px;
-  padding: 0 22px;
+  min-height: 46px;
+  font-weight: 800;
+}
+
+.hero-actions mat-icon {
+  margin-right: 6px;
+}
+
+.login-cta {
   display: inline-flex;
   align-items: center;
+  gap: 4px;
+  padding: 6px 4px;
+  color: rgba(248, 250, 252, 0.75);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.login-cta mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  margin-right: 2px;
+}
+
+.login-cta:hover {
+  color: #f8fafc;
+  border-color: rgba(248, 250, 252, 0.5);
+}
+
+.quick-info {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  background: #f6c343;
+}
+
+.quick-info article {
+  display: grid;
   gap: 8px;
+  padding: 28px 7vw;
+  background: #1f2937;
 }
 
-.hero-icon {
-  flex: 0 0 auto;
-  width: 180px;
-  height: 180px;
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
-  background: #e8f1ff;
-  color: #1565c0;
+.quick-info mat-icon {
+  color: #f6c343;
 }
 
-.hero-icon mat-icon {
-  width: 96px;
-  height: 96px;
-  font-size: 96px;
+.quick-info strong {
+  color: #f6c343;
+  font-size: 1.05rem;
 }
 
-.features {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 18px;
-  margin-bottom: 48px;
-}
-
-.feature-card {
-  padding: 26px;
-  border-radius: 14px;
-}
-
-.feature-card mat-icon {
-  color: #1565c0;
-  font-size: 34px;
-  width: 34px;
-  height: 34px;
-}
-
-.feature-card h2 {
-  margin: 16px 0 8px;
-  color: #111827;
-  font-size: 20px;
-}
-
-.feature-card p {
-  margin: 0;
-  color: #667085;
-  line-height: 1.5;
+.quick-info span {
+  color: #f8fafc;
+  line-height: 1.45;
 }
 
 .cta {
+  width: min(1120px, calc(100% - 32px));
+  margin: 42px auto 64px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 20px;
   padding: 28px 32px;
   border-radius: 14px;
-  background: #0f172a;
-  color: #ffffff;
+  border-left: 6px solid #f6c343;
+  background: #ffffff;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
 }
 
 .cta h2 {
   margin: 0 0 6px;
-  font-size: 22px;
+  color: #153d7a;
+  font-size: 1.45rem;
 }
 
 .cta p {
   margin: 0;
-  color: #cbd5e1;
+  color: #4b5563;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 768px) {
   .hero {
-    flex-direction: column;
-    align-items: flex-start;
+    min-height: 500px;
+    padding: 58px 24px;
+    background:
+      linear-gradient(180deg, rgba(21, 61, 122, 0.86) 0%, rgba(21, 61, 122, 0.66) 54%, rgba(31, 41, 55, 0.88) 100%),
+      url("/images/hero-car-rental.png") center / cover no-repeat;
   }
 
-  .hero-icon {
-    align-self: center;
+  .hero-actions {
+    width: 100%;
   }
 
-  .features {
+  .hero-actions a[mat-flat-button],
+  .hero-actions a[mat-stroked-button] {
+    flex: 1 1 180px;
+  }
+
+  .quick-info {
     grid-template-columns: 1fr;
   }
 
@@ -140,15 +164,4 @@ h1 {
     flex-direction: column;
     align-items: flex-start;
   }
-
-  h1 {
-    font-size: 30px;
-  }
-
-  .login-cta {
-  height: 42px;
-  padding: 0 20px;
-  margin-left: 4px;
-  border-radius: 999px;
-}
 }

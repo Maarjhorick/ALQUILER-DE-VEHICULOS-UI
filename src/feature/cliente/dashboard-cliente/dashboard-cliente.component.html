@@ -1,0 +1,46 @@
+<section class="role-page">
+  <div class="role-hero">
+    <div>
+      <p class="eyebrow">Portal del cliente</p>
+      <h1>Reserva tu proximo vehiculo</h1>
+      <p class="description">
+        Explora la flota disponible, solicita una reserva y revisa el estado de tus alquileres.
+      </p>
+    </div>
+
+    <a mat-flat-button color="primary" routerLink="/catalogo">
+      <mat-icon>directions_car</mat-icon>
+      Ver catalogo
+    </a>
+  </div>
+
+  <section class="summary-grid">
+    <mat-card class="summary-card">
+      <mat-icon>garage</mat-icon>
+      <span>Vehiculos disponibles</span>
+      <strong>{{ vehiculosDisponibles() }}</strong>
+    </mat-card>
+
+    <mat-card class="summary-card">
+      <mat-icon>assignment</mat-icon>
+      <span>Reservas activas</span>
+      <strong>{{ reservasActivas() }}</strong>
+    </mat-card>
+  </section>
+
+  <section class="actions-grid">
+    <mat-card class="action-card">
+      <mat-icon>search</mat-icon>
+      <h2>Buscar vehiculo</h2>
+      <p>Filtra la flota por tipo y elige la unidad que mejor se adapte a tu ruta.</p>
+      <a mat-stroked-button color="primary" routerLink="/catalogo">Explorar</a>
+    </mat-card>
+
+    <mat-card class="action-card">
+      <mat-icon>calendar_month</mat-icon>
+      <h2>Solicitar reserva</h2>
+      <p>Registra fechas, datos personales y vehiculo para que el equipo confirme tu solicitud.</p>
+      <a mat-stroked-button color="primary" routerLink="/reservar">Reservar</a>
+    </mat-card>
+  </section>
+</section>

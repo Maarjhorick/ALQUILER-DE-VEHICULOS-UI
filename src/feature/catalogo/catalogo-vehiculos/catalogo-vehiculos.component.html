@@ -33,8 +33,8 @@
 
           <div class="precio-row">
             <span class="precio">S/ {{ vehiculo.precioDia }}<small>/día</small></span>
-            <a mat-flat-button color="primary" routerLink="/contactanos">
-              Consultar
+            <a mat-flat-button color="primary" [routerLink]="['/reservar']" [queryParams]="{ vehiculoId: vehiculo.idVehiculo }">
+              Reservar
             </a>
           </div>
         </div>

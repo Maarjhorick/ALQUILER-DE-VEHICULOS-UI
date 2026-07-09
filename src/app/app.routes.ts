@@ -15,6 +15,10 @@ import { SolicitarCuentaComponent } from '../feature/auth/solicitar-cuenta/solic
 import { CatalogoVehiculosComponent } from '../feature/catalogo/catalogo-vehiculos/catalogo-vehiculos.component';
 import { authGuard } from '../core/guard/auth.guard';
 
+import { DashboardAdminComponent } from '../feature/admin/dashboard-admin/dashboard-admin.component';
+import { DashboardClienteComponent } from '../feature/cliente/dashboard-cliente/dashboard-cliente.component';
+import { ReservaPublicaComponent } from '../feature/reservas/reserva-publica/reserva-publica.component';
+
 export const routes: Routes = [
   {
     path: 'login',
@@ -38,9 +42,24 @@ export const routes: Routes = [
       {
       path: 'empleado',
       component: DashboardEmpleadoComponent,
-      //ACTIVAR DESPUES
       canActivate: [authGuard],
       //data: { roles: ['ADMIN', 'EMPLEADO'] }
+      },
+      {
+        path: 'admin',
+        component: DashboardAdminComponent,
+        canActivate: [authGuard],
+        data: { roles: ['ADMIN'] }
+      },
+      {
+        path: 'cliente',
+        component: DashboardClienteComponent,
+        canActivate: [authGuard],
+        data: { roles: ['CLIENTE'] }
+      },
+      {
+        path: 'reservar',
+        component: ReservaPublicaComponent
       },
       {
         path: 'catalogo',

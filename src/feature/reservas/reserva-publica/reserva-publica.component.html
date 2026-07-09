@@ -1,0 +1,96 @@
+<section class="reserva-page">
+  <div class="reserva-header">
+    <p class="eyebrow">Reserva online</p>
+    <h1>Solicita tu vehiculo</h1>
+    <p>Completa tus datos para registrar la solicitud. Un empleado podra verla luego en la vista de alquileres.</p>
+  </div>
+
+  @if (enviado()) {
+    <div class="success-message">
+      <mat-icon>check_circle</mat-icon>
+      <div>
+        <strong>Solicitud registrada</strong>
+        <span>Tu reserva quedo guardada en el frontend y lista para enviarse al backend cuando la API este conectada.</span>
+      </div>
+    </div>
+  }
+
+  <form class="reserva-form" #reservaForm="ngForm" (ngSubmit)="registrar(reservaForm)">
+    <section class="form-section">
+      <h2>Vehiculo y fechas</h2>
+
+      <label>
+        Vehiculo
+        <select name="vehiculoId" [(ngModel)]="reserva.vehiculoId" required>
+          <option [ngValue]="0" disabled>Selecciona un vehiculo</option>
+          @for (vehiculo of vehiculosDisponibles(); track vehiculo.idVehiculo) {
+            <option [ngValue]="vehiculo.idVehiculo">
+              {{ vehiculo.modelo?.marca?.nombreMarca }} {{ vehiculo.modelo?.modelo }} - S/ {{ vehiculo.precioDia }} por dia
+            </option>
+          }
+        </select>
+      </label>
+
+      <div class="form-grid">
+        <label>
+          Fecha de inicio
+          <input type="date" name="fechaInicio" [(ngModel)]="reserva.fechaInicio" required>
+        </label>
+
+        <label>
+          Fecha de devolucion
+          <input type="date" name="fechaFin" [(ngModel)]="reserva.fechaFin" required>
+        </label>
+      </div>
+
+      <div class="total-box">
+        <span>Total estimado</span>
+        <strong>S/ {{ calcularTotal() }}</strong>
+      </div>
+    </section>
+
+    <section class="form-section">
+      <h2>Datos del cliente</h2>
+
+      <div class="form-grid">
+        <label>
+          Nombres
+          <input type="text" name="nombres" [(ngModel)]="reserva.nombres" required>
+        </label>
+
+        <label>
+          Apellidos
+          <input type="text" name="apellidos" [(ngModel)]="reserva.apellidos" required>
+        </label>
+
+        <label>
+          DNI o documento
+          <input type="text" name="dni" [(ngModel)]="reserva.dni" required>
+        </label>
+
+        <label>
+          Telefono
+          <input type="tel" name="telefono" [(ngModel)]="reserva.telefono" required>
+        </label>
+
+        <label>
+          Correo
+          <input type="email" name="email" [(ngModel)]="reserva.email" required>
+        </label>
+
+        <label>
+          Direccion
+          <input type="text" name="direccion" [(ngModel)]="reserva.direccion" required>
+        </label>
+      </div>
+    </section>
+
+    <div class="form-actions">
+      <a mat-stroked-button routerLink="/catalogo">Volver al catalogo</a>
+      <button mat-flat-button color="primary" type="submit">
+        <mat-icon>send</mat-icon>
+        Enviar solicitud
+      </button>
+    </div>
+  </form>
+</section>

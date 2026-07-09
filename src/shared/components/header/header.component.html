@@ -1,18 +1,18 @@
 <mat-toolbar class="main-header">
-  <a class="brand" (click)="irAInicio()">
-    <span class="brand-mark">
-      <mat-icon>directions_car</mat-icon>
-    </span>
-
-    <span class="brand-copy">
-      <strong>Paul Car's</strong>
-      <small>Alquiler de vehículos</small>
-    </span>
-  </a>
-
-  <span class="spacer"></span>
-
   @if (mostrarMenuAutenticado()) {
+    <a class="brand" (click)="irAInicio()">
+      <span class="brand-mark">
+        <mat-icon>directions_car</mat-icon>
+      </span>
+
+      <span class="brand-copy">
+        <strong>Paul Car's</strong>
+        <small>Alquiler de vehículos</small>
+      </span>
+    </a>
+
+    <span class="spacer"></span>
+
     <nav class="desktop-nav">
       <a mat-button routerLink="/vehiculos">Vehículos</a>
       <a mat-button routerLink="/clientes">Clientes</a>
@@ -85,10 +85,21 @@
       </button>
     </mat-menu>
   } @else {
-    <nav class="desktop-nav public-nav">
+    <a class="brand-public" (click)="irAInicio()">
+      <img src="images/logo.png" alt="Paul Car's alquiler de vehículos" class="brand-logo">
+    </a>
+
+    <span class="spacer"></span>
+
+    <nav class="desktop-nav public-nav" aria-label="Menú público">
       <a mat-button routerLink="/nosotros">Nosotros</a>
-      <a mat-button routerLink="/contactanos">Contacto</a>
+      <a mat-button routerLink="/nosotros" fragment="contacto">Contactanos</a>
     </nav>
+
+    <a mat-flat-button color="warn" class="reserve-cta" routerLink="/reservar">
+      <mat-icon>calendar_month</mat-icon>
+      Reservar
+    </a>
 
     <button
       mat-icon-button
@@ -101,7 +112,8 @@
 
     <mat-menu #publicMobileMenu="matMenu">
       <a mat-menu-item routerLink="/nosotros">Nosotros</a>
-      <a mat-menu-item routerLink="/contactanos">Contacto</a>
+      <a mat-menu-item routerLink="/nosotros" fragment="contacto">Contacto</a>
+      <a mat-menu-item routerLink="/reservar">Reservar</a>
       <a mat-menu-item routerLink="/login">Iniciar sesión</a>
     </mat-menu>
   }
