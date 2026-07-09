@@ -1,29 +1,120 @@
-<mat-toolbar color="primary">
+<mat-toolbar class="main-header">
+  @if (mostrarMenuAutenticado()) {
+    <a class="brand" (click)="irAInicio()">
+      <span class="brand-mark">
+        <mat-icon>directions_car</mat-icon>
+      </span>
 
-    <span>Sistema de Alquiler de Vehículos</span>
+      <span class="brand-copy">
+        <strong>Paul Car's</strong>
+        <small>Alquiler de vehículos</small>
+      </span>
+    </a>
 
     <span class="spacer"></span>
 
-    <a mat-button routerLink="/">Inicio</a>
+    <nav class="desktop-nav">
+      <a mat-button routerLink="/vehiculos">Vehículos</a>
+      <a mat-button routerLink="/clientes">Clientes</a>
+      <a mat-button routerLink="/alquileres">Alquileres</a>
+    </nav>
 
-    <a mat-button routerLink="/vehiculos">
-        Vehículos
+    <button
+      mat-icon-button
+      class="notification-button"
+      aria-label="Notificaciones"
+    >
+      <mat-icon matBadge="9+" matBadgeColor="warn" matBadgeSize="small">
+        notifications_none
+      </mat-icon>
+    </button>
+
+    <div class="divider"></div>
+
+    <button
+      mat-button
+      class="profile-button"
+      [matMenuTriggerFor]="profileMenu"
+    >
+      <span class="profile-greeting">
+        Hola, <strong>{{ authService.usuarioActual()?.username || 'EMPLEADO' }}</strong>
+      </span>
+
+      <span class="avatar">
+        <mat-icon>person</mat-icon>
+      </span>
+
+      <mat-icon class="arrow-icon">keyboard_arrow_down</mat-icon>
+    </button>
+
+    <mat-menu #profileMenu="matMenu" xPosition="before">
+      <button mat-menu-item type="button" (click)="authService.logout()">
+        <mat-icon>logout</mat-icon>
+        <span>Cerrar sesión</span>
+      </button>
+    </mat-menu>
+
+    <button
+      mat-icon-button
+      class="mobile-menu-button"
+      [matMenuTriggerFor]="mobileMenu"
+      aria-label="Abrir menú"
+    >
+      <mat-icon>menu</mat-icon>
+    </button>
+
+    <mat-menu #mobileMenu="matMenu">
+      <a mat-menu-item routerLink="/vehiculos">
+        <mat-icon>directions_car</mat-icon>
+        <span>Vehículos</span>
+      </a>
+
+      <a mat-menu-item routerLink="/clientes">
+        <mat-icon>groups</mat-icon>
+        <span>Clientes</span>
+      </a>
+
+      <a mat-menu-item routerLink="/alquileres">
+        <mat-icon>assignment</mat-icon>
+        <span>Alquileres</span>
+      </a>
+
+      <button mat-menu-item type="button" (click)="authService.logout()">
+        <mat-icon>logout</mat-icon>
+        <span>Cerrar sesión</span>
+      </button>
+    </mat-menu>
+  } @else {
+    <a class="brand-public" (click)="irAInicio()">
+      <img src="images/logo.png" alt="Paul Car's alquiler de vehículos" class="brand-logo">
     </a>
 
-    <a mat-button routerLink="/clientes">
-        Clientes
+    <span class="spacer"></span>
+
+    <nav class="desktop-nav public-nav" aria-label="Menú público">
+      <a mat-button routerLink="/nosotros">Nosotros</a>
+      <a mat-button routerLink="/nosotros" fragment="contacto">Contactanos</a>
+    </nav>
+
+    <a mat-flat-button color="warn" class="reserve-cta" routerLink="/reservar">
+      <mat-icon>calendar_month</mat-icon>
+      Reservar
     </a>
 
-    <a mat-button routerLink="/alquileres">
-        Alquileres
-    </a>
+    <button
+      mat-icon-button
+      class="mobile-menu-button"
+      [matMenuTriggerFor]="publicMobileMenu"
+      aria-label="Abrir menú"
+    >
+      <mat-icon>menu</mat-icon>
+    </button>
 
-    <a mat-button routerLink="/nosotros">
-        Nosotros
-    </a>
-
-    <a mat-button routerLink="/contactanos">
-        Contacto
-    </a>
-
+    <mat-menu #publicMobileMenu="matMenu">
+      <a mat-menu-item routerLink="/nosotros">Nosotros</a>
+      <a mat-menu-item routerLink="/nosotros" fragment="contacto">Contacto</a>
+      <a mat-menu-item routerLink="/reservar">Reservar</a>
+      <a mat-menu-item routerLink="/login">Iniciar sesión</a>
+    </mat-menu>
+  }
 </mat-toolbar>

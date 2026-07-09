@@ -1,9 +1,47 @@
-<h1>Sistema de Alquiler de Vehículos</h1>
+<section class="home-page">
+  <section class="hero">
+    <div class="hero-copy">
+      <p class="eyebrow">Paul Car's</p>
+      <h1>Alquila el vehículo perfecto para tu próximo viaje</h1>
+      <p class="description">
+        Autos modernos para viajes, trabajo y rutas urbanas con atención rápida,
+        precios claros y una flota lista para salir.
+      </p>
 
-<nav>
-  <a routerLink="/">Inicio</a> |
-  <a routerLink="/nosotros">Nosotros</a> |
-  <a routerLink="/contactanos">Contacto</a>
-</nav>
+      <div class="hero-actions">
+        <a class="login-cta" routerLink="/login">
+          <mat-icon>login</mat-icon>
+          Iniciar sesión
+        </a>
+      </div>
+    </div>
+  </section>
 
-<p>Bienvenido al sistema de alquiler de vehículos PAUL CAR'S</p>
+  <section class="quick-info" aria-label="Beneficios">
+    <article>
+      <mat-icon>garage</mat-icon>
+      <strong>Flota moderna</strong>
+      <span>Vehículos listos para ciudad, carretera y trabajo.</span>
+    </article>
+
+    <article>
+      <mat-icon>bolt</mat-icon>
+      <strong>Reserva simple</strong>
+      <span>Elige una opción disponible y coordina tu alquiler en minutos.</span>
+    </article>
+
+    <article>
+      <mat-icon>support_agent</mat-icon>
+      <strong>Atención cercana</strong>
+      <span>Soporte para elegir el auto adecuado según tu ruta.</span>
+    </article>
+  </section>
+
+  <section class="cta">
+    <div>
+      <h2>¿Listo para reservar?</h2>
+      <p>Revisa la flota disponible y solicita el vehículo que necesitas.</p>
+    </div>
+    <a mat-flat-button color="primary" routerLink="/catalogo">Ver catálogo</a>
+  </section>
+</section>

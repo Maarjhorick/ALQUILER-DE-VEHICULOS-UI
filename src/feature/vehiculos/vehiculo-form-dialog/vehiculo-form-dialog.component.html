@@ -1,0 +1,128 @@
+<div class="vehiculo-dialog">
+  <h2 mat-dialog-title>{{ esEdicion ? 'Editar vehículo' : 'Nuevo vehículo' }}</h2>
+
+  <form [formGroup]="form" (ngSubmit)="guardar()">
+    <mat-dialog-content>
+      <div class="grid-2">
+        <mat-form-field appearance="outline">
+          <mat-label>Modelo</mat-label>
+          <mat-select formControlName="idModelo">
+            @for (m of catalogos?.modelos; track m.idModelo) {
+              <mat-option [value]="m.idModelo">{{ m.marca.nombreMarca }} {{ m.modelo }}</mat-option>
+            }
+          </mat-select>
+          @if (form.controls.idModelo.hasError('required') && form.controls.idModelo.touched) {
+            <mat-error>Selecciona un modelo.</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Tipo</mat-label>
+          <mat-select formControlName="idTipo">
+            @for (t of catalogos?.tiposVehiculo; track t.idTipo) {
+              <mat-option [value]="t.idTipo">{{ t.nombreTipo }}</mat-option>
+            }
+          </mat-select>
+          @if (form.controls.idTipo.hasError('required') && form.controls.idTipo.touched) {
+            <mat-error>Selecciona un tipo.</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <div class="grid-2">
+        <mat-form-field appearance="outline">
+          <mat-label>Placa</mat-label>
+          <input matInput formControlName="placa" placeholder="ABC-123" style="text-transform: uppercase;">
+          @if (form.controls.placa.hasError('required') && form.controls.placa.touched) {
+            <mat-error>La placa es obligatoria.</mat-error>
+          }
+          @if (form.controls.placa.hasError('pattern') && form.controls.placa.touched) {
+            <mat-error>Formato esperado: ABC-123.</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Color</mat-label>
+          <input matInput formControlName="color" placeholder="Rojo">
+          @if (form.controls.color.hasError('required') && form.controls.color.touched) {
+            <mat-error>El color es obligatorio.</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <div class="grid-2">
+        <mat-form-field appearance="outline">
+          <mat-label>Número de motor</mat-label>
+          <input matInput formControlName="numeroMotor">
+          @if (form.controls.numeroMotor.hasError('required') && form.controls.numeroMotor.touched) {
+            <mat-error>Obligatorio.</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>VIN</mat-label>
+          <input matInput formControlName="numeroVin">
+          @if (form.controls.numeroVin.hasError('required') && form.controls.numeroVin.touched) {
+            <mat-error>Obligatorio.</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <div class="grid-2">
+        <mat-form-field appearance="outline">
+          <mat-label>Año</mat-label>
+          <input matInput type="number" formControlName="anio">
+          @if (form.controls.anio.hasError('required') && form.controls.anio.touched) {
+            <mat-error>El año es obligatorio.</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Combustible</mat-label>
+          <mat-select formControlName="idCombustible">
+            @for (c of catalogos?.combustibles; track c.idCombustible) {
+              <mat-option [value]="c.idCombustible">{{ c.nombreCombustible }}</mat-option>
+            }
+          </mat-select>
+          @if (form.controls.idCombustible.hasError('required') && form.controls.idCombustible.touched) {
+            <mat-error>Selecciona un combustible.</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <div class="grid-2">
+        <mat-form-field appearance="outline">
+          <mat-label>Precio por día (S/)</mat-label>
+          <input matInput type="number" formControlName="precioDia">
+          @if (form.controls.precioDia.hasError('required') && form.controls.precioDia.touched) {
+            <mat-error>Obligatorio.</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Precio por hora (S/)</mat-label>
+          <input matInput type="number" formControlName="precioHora">
+          @if (form.controls.precioHora.hasError('required') && form.controls.precioHora.touched) {
+            <mat-error>Obligatorio.</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <mat-form-field appearance="outline" class="full">
+        <mat-label>Estado</mat-label>
+        <mat-select formControlName="idEstado">
+          @for (e of catalogos?.estadosVehiculo; track e.idEstado) {
+            <mat-option [value]="e.idEstado">{{ e.nombreEstado }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end">
+      <button mat-stroked-button type="button" (click)="cancelar()">Cancelar</button>
+      <button mat-flat-button color="primary" type="submit">
+        {{ esEdicion ? 'Guardar cambios' : 'Registrar vehículo' }}
+      </button>
+    </mat-dialog-actions>
+  </form>
+</div>

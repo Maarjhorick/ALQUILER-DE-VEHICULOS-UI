@@ -1,0 +1,51 @@
+<section class="catalogo-page">
+  <div class="catalogo-header">
+    <p class="eyebrow">Nuestra flota</p>
+    <h1>Vehículos disponibles</h1>
+    <p class="description">
+      Explora los vehículos disponibles ahora mismo. Si encuentras el ideal para ti,
+      contáctanos para coordinar tu alquiler.
+    </p>
+  </div>
+
+  <mat-chip-listbox
+    aria-label="Filtrar por tipo de vehículo"
+    (change)="filtrarPorTipo($any($event.value))"
+    [value]="filtroTipo()"
+    class="filtros"
+  >
+    @for (tipo of tipos(); track tipo) {
+      <mat-chip-option [value]="tipo">{{ tipo === 'TODOS' ? 'Todos' : tipo }}</mat-chip-option>
+    }
+  </mat-chip-listbox>
+
+  <div class="carrusel">
+    @for (vehiculo of vehiculosPublicos(); track vehiculo.idVehiculo) {
+      <article class="vehiculo-card">
+        <div class="vehiculo-imagen">
+          <mat-icon class="icono-placeholder">directions_car</mat-icon>
+          <span class="tipo-badge">{{ vehiculo.tipo?.nombreTipo }}</span>
+        </div>
+
+        <div class="vehiculo-info">
+          <h2>{{ vehiculo.modelo?.marca?.nombreMarca }} {{ vehiculo.modelo?.modelo }}</h2>
+          <p class="anio">{{ vehiculo.anio }}</p>
+
+          <div class="precio-row">
+            <span class="precio">S/ {{ vehiculo.precioDia }}<small>/día</small></span>
+            <a mat-flat-button color="primary" [routerLink]="['/reservar']" [queryParams]="{ vehiculoId: vehiculo.idVehiculo }">
+              Reservar
+            </a>
+          </div>
+        </div>
+      </article>
+    }
+
+    @if (vehiculosPublicos().length === 0) {
+      <div class="empty-state">
+        <mat-icon>directions_car_filled</mat-icon>
+        <p>No hay vehículos disponibles con ese filtro por el momento.</p>
+      </div>
+    }
+  </div>
+</section>

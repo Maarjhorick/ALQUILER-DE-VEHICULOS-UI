@@ -1,0 +1,65 @@
+<section class="employee-page">
+  <div class="employee-header">
+    <div>
+      <p class="eyebrow">Panel de empleado</p>
+      <h1>Gestión operativa</h1>
+      <p class="description">
+        Administra clientes, alquileres y disponibilidad de vehículos desde un solo lugar.
+      </p>
+    </div>
+
+    <a mat-flat-button color="primary" routerLink="/alquileres">
+      <mat-icon>add_circle</mat-icon>
+      Nuevo alquiler
+    </a>
+  </div>
+
+  <section class="summary-grid">
+    <mat-card class="summary-card">
+      <mat-icon>directions_car</mat-icon>
+      <div>
+        <span>Vehículos disponibles</span>
+        <strong>12</strong>
+      </div>
+    </mat-card>
+
+    <mat-card class="summary-card">
+      <mat-icon>assignment</mat-icon>
+      <div>
+        <span>Alquileres activos</span>
+        <strong>8</strong>
+      </div>
+    </mat-card>
+
+    <mat-card class="summary-card">
+      <mat-icon>groups</mat-icon>
+      <div>
+        <span>Clientes registrados</span>
+        <strong>35</strong>
+      </div>
+    </mat-card>
+  </section>
+
+  <section class="actions-grid">
+    <mat-card class="action-card">
+      <mat-icon>person_add</mat-icon>
+      <h2>Clientes</h2>
+      <p>Registra nuevos clientes y consulta su información principal.</p>
+      <a mat-stroked-button color="primary" routerLink="/clientes">Ir a clientes</a>
+    </mat-card>
+
+    <mat-card class="action-card">
+      <mat-icon>car_rental</mat-icon>
+      <h2>Alquileres</h2>
+      <p>Crea contratos de alquiler, revisa fechas y controla devoluciones.</p>
+      <a mat-stroked-button color="primary" routerLink="/alquileres">Ir a alquileres</a>
+    </mat-card>
+
+    <mat-card class="action-card">
+      <mat-icon>garage</mat-icon>
+      <h2>Vehículos</h2>
+      <p>Consulta vehículos disponibles, alquilados o en mantenimiento.</p>
+      <a mat-stroked-button color="primary" routerLink="/vehiculos">Ver vehículos</a>
+    </mat-card>
+  </section>
+</section>

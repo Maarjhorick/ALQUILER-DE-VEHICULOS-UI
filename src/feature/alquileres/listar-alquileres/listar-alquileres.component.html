@@ -1,1 +1,93 @@
-<p>listar-alquileres works!</p>
+<section class="page">
+  <app-back-button></app-back-button>
+  <div class="page-header">
+    <div>
+      <p class="eyebrow">Contratos</p>
+      <h1>Alquileres</h1>
+      <p class="description">Crea contratos de alquiler, revisa fechas y controla devoluciones.</p>
+    </div>
+
+    <button mat-flat-button color="primary" (click)="abrirNuevo()">
+      <mat-icon>add_circle</mat-icon>
+      Nuevo alquiler
+    </button>
+  </div>
+
+  <div class="toolbar">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Buscar por cliente o vehículo</mat-label>
+      <input matInput (input)="buscar($any($event.target).value)" placeholder="Ej: Marjhorick, Toyota Yaris">
+      <mat-icon matPrefix>search</mat-icon>
+    </mat-form-field>
+
+    <mat-chip-listbox aria-label="Filtrar por estado" (change)="filtrarPorEstado($any($event.value))" [value]="filtroEstado()">
+      <mat-chip-option value="TODOS">Todos</mat-chip-option>
+      <mat-chip-option value="ACTIVO">Activos</mat-chip-option>
+      <mat-chip-option value="FINALIZADO">Finalizados</mat-chip-option>
+      <mat-chip-option value="CANCELADO">Cancelados</mat-chip-option>
+    </mat-chip-listbox>
+  </div>
+
+  <div class="table-card">
+    <table mat-table [dataSource]="alquileresFiltrados()">
+      <ng-container matColumnDef="cliente">
+        <th mat-header-cell *matHeaderCellDef>Cliente</th>
+        <td mat-cell *matCellDef="let a">{{ a.clienteNombre }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="vehiculo">
+        <th mat-header-cell *matHeaderCellDef>Vehículo</th>
+        <td mat-cell *matCellDef="let a">
+          <div class="vehiculo-cell">
+            <span class="vehiculo-icon"><mat-icon>directions_car</mat-icon></span>
+            {{ a.vehiculoNombre }}
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="fechas">
+        <th mat-header-cell *matHeaderCellDef>Periodo</th>
+        <td mat-cell *matCellDef="let a">{{ a.fechaInicio }} → {{ a.fechaFin }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="total">
+        <th mat-header-cell *matHeaderCellDef>Total</th>
+        <td mat-cell *matCellDef="let a">S/ {{ a.total }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="estado">
+        <th mat-header-cell *matHeaderCellDef>Estado</th>
+        <td mat-cell *matCellDef="let a">
+          <span class="badge" [ngClass]="claseEstado(a.estado)">{{ a.estado }}</span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="acciones">
+        <th mat-header-cell *matHeaderCellDef class="acciones-header">Acciones</th>
+        <td mat-cell *matCellDef="let a" class="acciones-cell">
+          @if (a.estado === 'ACTIVO') {
+            <button mat-icon-button matTooltip="Finalizar" (click)="finalizar(a)">
+              <mat-icon>check_circle</mat-icon>
+            </button>
+            <button mat-icon-button matTooltip="Cancelar" (click)="cancelar(a)">
+              <mat-icon>cancel</mat-icon>
+            </button>
+          }
+          <button mat-icon-button matTooltip="Eliminar" color="warn" (click)="eliminar(a)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="columnas"></tr>
+      <tr mat-row *matRowDef="let row; columns: columnas;"></tr>
+    </table>
+
+    @if (alquileresFiltrados().length === 0) {
+      <div class="empty-state">
+        <mat-icon>assignment_late</mat-icon>
+        <p>No se encontraron alquileres con los filtros seleccionados.</p>
+      </div>
+    }
+  </div>
+</section>

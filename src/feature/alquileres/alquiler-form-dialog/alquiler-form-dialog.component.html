@@ -1,0 +1,72 @@
+<div class="alquiler-dialog">
+  <h2 mat-dialog-title>Nuevo alquiler</h2>
+
+  <form [formGroup]="form" (ngSubmit)="guardar()">
+    <mat-dialog-content>
+      <mat-form-field appearance="outline" class="full">
+        <mat-label>Cliente</mat-label>
+        <mat-select formControlName="clienteId">
+          @for (cliente of clientes(); track cliente.id) {
+            <mat-option [value]="cliente.id">{{ cliente.nombres }} {{ cliente.apellidos }} — {{ cliente.dni }}</mat-option>
+          }
+        </mat-select>
+        @if (form.controls.clienteId.hasError('required') && form.controls.clienteId.touched) {
+          <mat-error>Selecciona un cliente.</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full">
+        <mat-label>Vehículo disponible</mat-label>
+        <mat-select formControlName="vehiculoId">
+          @for (vehiculo of vehiculosDisponibles(); track vehiculo.idVehiculo) {
+  <mat-option [value]="vehiculo.idVehiculo">
+    {{ vehiculo.modelo?.marca?.nombreMarca }} {{ vehiculo.modelo?.modelo }} ({{ vehiculo.placa }}) — S/ {{ vehiculo.precioDia }}/día
+  </mat-option>
+}
+        </mat-select>
+        @if (form.controls.vehiculoId.hasError('required') && form.controls.vehiculoId.touched) {
+          <mat-error>Selecciona un vehículo.</mat-error>
+        }
+        @if (vehiculosDisponibles().length === 0) {
+          <mat-hint>No hay vehículos disponibles en este momento.</mat-hint>
+        }
+      </mat-form-field>
+
+      <div class="grid-2">
+        <mat-form-field appearance="outline">
+          <mat-label>Fecha de inicio</mat-label>
+          <input matInput [matDatepicker]="pickerInicio" formControlName="fechaInicio">
+          <mat-datepicker-toggle matSuffix [for]="pickerInicio"></mat-datepicker-toggle>
+          <mat-datepicker #pickerInicio></mat-datepicker>
+          @if (form.controls.fechaInicio.hasError('required') && form.controls.fechaInicio.touched) {
+            <mat-error>La fecha de inicio es obligatoria.</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Fecha de fin</mat-label>
+          <input matInput [matDatepicker]="pickerFin" formControlName="fechaFin">
+          <mat-datepicker-toggle matSuffix [for]="pickerFin"></mat-datepicker-toggle>
+          <mat-datepicker #pickerFin></mat-datepicker>
+          @if (form.controls.fechaFin.hasError('required') && form.controls.fechaFin.touched) {
+            <mat-error>La fecha de fin es obligatoria.</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      @if (form.hasError('rangoInvalido') && (form.controls.fechaFin.touched || form.controls.fechaInicio.touched)) {
+        <p class="error-texto">La fecha de fin debe ser posterior a la fecha de inicio.</p>
+      }
+
+      <div class="total-box">
+        <span>Total estimado</span>
+        <strong>S/ {{ totalEstimado() }}</strong>
+      </div>
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end">
+      <button mat-stroked-button type="button" (click)="cancelar()">Cancelar</button>
+      <button mat-flat-button color="primary" type="submit">Registrar alquiler</button>
+    </mat-dialog-actions>
+  </form>
+</div>
