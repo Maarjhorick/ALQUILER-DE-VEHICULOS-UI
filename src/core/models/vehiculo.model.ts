@@ -1,13 +1,16 @@
-export type EstadoVehiculo = 'DISPONIBLE' | 'ALQUILADO' | 'MANTENIMIENTO';
+import { Combustible, EstadoVehiculoCatalogo, Modelo, TipoVehiculo } from './catalogo.model';
 
 export interface Vehiculo {
-  id: number;
-  marca: string;
-  modelo: string;
+  idVehiculo?: number;
   placa: string;
+  color: string;
   anio: number;
-  tipo: string;
-  precioPorDia: number;
-  estado: EstadoVehiculo;
-  imagenUrl?: string;
+  numeroMotor: string;
+  numeroVin: string;
+  precioDia: number;
+  precioHora: number;
+  modelo: Modelo;
+  tipo: TipoVehiculo;
+  combustible: Combustible;
+  estado: EstadoVehiculoCatalogo;
 }

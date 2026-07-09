@@ -20,19 +20,19 @@
   </mat-chip-listbox>
 
   <div class="carrusel">
-    @for (vehiculo of vehiculosPublicos(); track vehiculo.id) {
+    @for (vehiculo of vehiculosPublicos(); track vehiculo.idVehiculo) {
       <article class="vehiculo-card">
         <div class="vehiculo-imagen">
-          <img [src]="vehiculo.imagenUrl" [alt]="vehiculo.marca + ' ' + vehiculo.modelo" loading="lazy">
-          <span class="tipo-badge">{{ vehiculo.tipo }}</span>
+          <mat-icon class="icono-placeholder">directions_car</mat-icon>
+          <span class="tipo-badge">{{ vehiculo.tipo?.nombreTipo }}</span>
         </div>
 
         <div class="vehiculo-info">
-          <h2>{{ vehiculo.marca }} {{ vehiculo.modelo }}</h2>
+          <h2>{{ vehiculo.modelo?.marca?.nombreMarca }} {{ vehiculo.modelo?.modelo }}</h2>
           <p class="anio">{{ vehiculo.anio }}</p>
 
           <div class="precio-row">
-            <span class="precio">S/ {{ vehiculo.precioPorDia }}<small>/día</small></span>
+            <span class="precio">S/ {{ vehiculo.precioDia }}<small>/día</small></span>
             <a mat-flat-button color="primary" routerLink="/contactanos">
               Consultar
             </a>

@@ -18,11 +18,11 @@
       <mat-form-field appearance="outline" class="full">
         <mat-label>Vehículo disponible</mat-label>
         <mat-select formControlName="vehiculoId">
-          @for (vehiculo of vehiculosDisponibles(); track vehiculo.id) {
-            <mat-option [value]="vehiculo.id">
-              {{ vehiculo.marca }} {{ vehiculo.modelo }} ({{ vehiculo.placa }}) — S/ {{ vehiculo.precioPorDia }}/día
-            </mat-option>
-          }
+          @for (vehiculo of vehiculosDisponibles(); track vehiculo.idVehiculo) {
+  <mat-option [value]="vehiculo.idVehiculo">
+    {{ vehiculo.modelo?.marca?.nombreMarca }} {{ vehiculo.modelo?.modelo }} ({{ vehiculo.placa }}) — S/ {{ vehiculo.precioDia }}/día
+  </mat-option>
+}
         </mat-select>
         @if (form.controls.vehiculoId.hasError('required') && form.controls.vehiculoId.touched) {
           <mat-error>Selecciona un vehículo.</mat-error>

@@ -40,7 +40,7 @@ export class LoginComponent {
   error = '';
 
   loginForm = this.fb.nonNullable.group({
-  email: ['', [Validators.required]],
+  username: ['', [Validators.required]],
   password: ['', [Validators.required]]
 });
 
@@ -54,26 +54,26 @@ export class LoginComponent {
     this.error = '';
 
     this.authService.login(this.loginForm.getRawValue()).subscribe({
-      next: ({ usuario }) => {
-        const destino = usuario.rol === 'EMPLEADO' ? '/empleado' : '/';
+      next: (response) => {
+        const destino = (response.rol === 'EMPLEADO' || response.rol === 'ADMIN') ? '/empleado' : '/';
 
-        this.router.navigate([destino]).then((exito) => {
-          this.cargando = false;
+    this.router.navigate([destino]).then((exito) => {
+      this.cargando = false;
 
-          if (!exito) {
-            console.error('La navegación a', destino, 'no se completó. Revisa la consola arriba por errores.');
-            this.error = 'No se pudo abrir el panel. Revisa la consola del navegador (F12).';
-          }
-        }).catch((err) => {
-          this.cargando = false;
-          console.error('Error de navegación:', err);
-          this.error = 'Ocurrió un error al abrir el panel.';
-        });
-      },
-      error: () => {
-        this.error = 'Solo puedes ingresar usando EMPLEADO como usuario.';
-        this.cargando = false;
+      if (!exito) {
+        console.error('La navegación a', destino, 'no se completó. Revisa la consola arriba por errores.');
+        this.error = 'No se pudo abrir el panel. Revisa la consola del navegador (F12).';
       }
+    }).catch((err) => {
+      this.cargando = false;
+      console.error('Error de navegación:', err);
+      this.error = 'Ocurrió un error al abrir el panel.';
     });
+  },
+  error: () => {
+    this.error = 'Usuario o contraseña incorrectos.';
+    this.cargando = false;
+  }
+});
   }
 }

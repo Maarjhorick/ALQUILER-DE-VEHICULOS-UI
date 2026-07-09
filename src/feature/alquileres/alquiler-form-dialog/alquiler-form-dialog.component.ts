@@ -47,7 +47,7 @@ export class AlquilerFormDialogComponent {
   readonly clientes = this.clienteService.clientes;
 
   readonly vehiculosDisponibles = computed(() =>
-    this.vehiculoService.vehiculos().filter((v) => v.estado === 'DISPONIBLE')
+    this.vehiculoService.vehiculos().filter((v) => v.estado?.nombreEstado === 'DISPONIBLE')
   );
 
   form = this.fb.nonNullable.group(
@@ -68,7 +68,7 @@ export class AlquilerFormDialogComponent {
 
   private calcularTotal(): void {
     const { vehiculoId, fechaInicio, fechaFin } = this.form.getRawValue();
-    const vehiculo = this.vehiculosDisponibles().find((v) => v.id === vehiculoId);
+    const vehiculo = this.vehiculosDisponibles().find((v) => v.idVehiculo === vehiculoId);
 
     if (!vehiculo || !fechaInicio || !fechaFin) {
       this.totalEstimado.set(0);
@@ -80,7 +80,7 @@ export class AlquilerFormDialogComponent {
       Math.round((new Date(fechaFin).getTime() - new Date(fechaInicio).getTime()) / 86_400_000)
     );
 
-    this.totalEstimado.set(dias * vehiculo.precioPorDia);
+    this.totalEstimado.set(dias * vehiculo.precioDia);
   }
 
   guardar(): void {
@@ -91,15 +91,15 @@ export class AlquilerFormDialogComponent {
 
     const { clienteId, vehiculoId, fechaInicio, fechaFin } = this.form.getRawValue();
     const cliente = this.clientes().find((c) => c.id === clienteId);
-    const vehiculo = this.vehiculosDisponibles().find((v) => v.id === vehiculoId);
+    const vehiculo = this.vehiculosDisponibles().find((v) => v.idVehiculo === vehiculoId);
 
     if (!cliente || !vehiculo || !fechaInicio || !fechaFin) return;
 
     const resultado: NuevoAlquiler = {
       clienteId: cliente.id,
       clienteNombre: `${cliente.nombres} ${cliente.apellidos}`,
-      vehiculoId: vehiculo.id,
-      vehiculoNombre: `${vehiculo.marca} ${vehiculo.modelo}`,
+      vehiculoId: vehiculo.idVehiculo!,
+      vehiculoNombre: `${vehiculo.modelo?.marca?.nombreMarca} ${vehiculo.modelo?.modelo}`,
       fechaInicio: new Date(fechaInicio).toISOString().slice(0, 10),
       fechaFin: new Date(fechaFin).toISOString().slice(0, 10),
       total: this.totalEstimado()

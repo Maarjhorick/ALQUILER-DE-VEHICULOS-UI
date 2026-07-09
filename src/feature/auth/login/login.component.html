@@ -19,14 +19,11 @@
       <form [formGroup]="loginForm" (ngSubmit)="iniciarSesion()">
         <mat-form-field appearance="outline">
           <mat-label>Correo o Usuario</mat-label>
-          <input matInput type="text" formControlName="email" autocomplete="username">
+          <input matInput type="text" formControlName="username" autocomplete="username">
 
-         <!-- @if (loginForm.controls.email.hasError('required')) {
-            <mat-error>El correo es obligatorio.</mat-error>
-        }-->
 
-          @if (loginForm.controls.email.hasError('email')) {
-            <mat-error>Ingresa un correo válido.</mat-error>
+          @if (loginForm.controls.username.hasError('required')) {
+            <mat-error>El usuario es obligatorio.</mat-error>
           }
         </mat-form-field>
 

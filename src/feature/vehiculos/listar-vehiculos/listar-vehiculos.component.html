@@ -23,24 +23,23 @@
     <mat-chip-listbox aria-label="Filtrar por estado" (change)="filtrarPorEstado($any($event.value))" [value]="filtroEstado()">
       <mat-chip-option value="TODOS">Todos</mat-chip-option>
       <mat-chip-option value="DISPONIBLE">Disponibles</mat-chip-option>
-      <mat-chip-option value="ALQUILADO">Alquilados</mat-chip-option>
-      <mat-chip-option value="MANTENIMIENTO">Mantenimiento</mat-chip-option>
+      <mat-chip-option value="NO DISPONIBLE">No disponibles</mat-chip-option>
     </mat-chip-listbox>
   </div>
 
   <div class="table-card">
     <table mat-table [dataSource]="vehiculosFiltrados()">
       <ng-container matColumnDef="vehiculo">
-        <th mat-header-cell *matHeaderCellDef>Vehículo</th>
-        <td mat-cell *matCellDef="let v">
-          <div class="vehiculo-cell">
-            <span class="vehiculo-icon"><mat-icon>directions_car</mat-icon></span>
-            <div>
-              <strong>{{ v.marca }} {{ v.modelo }}</strong>
-            </div>
-          </div>
-        </td>
-      </ng-container>
+  <th mat-header-cell *matHeaderCellDef>Vehículo</th>
+  <td mat-cell *matCellDef="let v">
+    <div class="vehiculo-cell">
+      <span class="vehiculo-icon"><mat-icon>directions_car</mat-icon></span>
+      <div>
+        <strong>{{ v.modelo?.marca?.nombreMarca }} {{ v.modelo?.modelo }}</strong>
+      </div>
+    </div>
+  </td>
+</ng-container>
 
       <ng-container matColumnDef="placa">
         <th mat-header-cell *matHeaderCellDef>Placa</th>
@@ -48,9 +47,9 @@
       </ng-container>
 
       <ng-container matColumnDef="tipo">
-        <th mat-header-cell *matHeaderCellDef>Tipo</th>
-        <td mat-cell *matCellDef="let v">{{ v.tipo }}</td>
-      </ng-container>
+  <th mat-header-cell *matHeaderCellDef>Tipo</th>
+  <td mat-cell *matCellDef="let v">{{ v.tipo?.nombreTipo }}</td>
+</ng-container>
 
       <ng-container matColumnDef="anio">
         <th mat-header-cell *matHeaderCellDef>Año</th>
@@ -58,16 +57,16 @@
       </ng-container>
 
       <ng-container matColumnDef="precio">
-        <th mat-header-cell *matHeaderCellDef>Precio/día</th>
-        <td mat-cell *matCellDef="let v">S/ {{ v.precioPorDia }}</td>
-      </ng-container>
+  <th mat-header-cell *matHeaderCellDef>Precio/día</th>
+  <td mat-cell *matCellDef="let v">S/ {{ v.precioDia }}</td>
+</ng-container>
 
       <ng-container matColumnDef="estado">
-        <th mat-header-cell *matHeaderCellDef>Estado</th>
-        <td mat-cell *matCellDef="let v">
-          <span class="badge" [ngClass]="claseEstado(v.estado)">{{ v.estado }}</span>
-        </td>
-      </ng-container>
+  <th mat-header-cell *matHeaderCellDef>Estado</th>
+  <td mat-cell *matCellDef="let v">
+    <span class="badge" [ngClass]="claseEstado(v.estado?.nombreEstado)">{{ v.estado?.nombreEstado }}</span>
+  </td>
+</ng-container>
 
       <ng-container matColumnDef="acciones">
         <th mat-header-cell *matHeaderCellDef class="acciones-header">Acciones</th>

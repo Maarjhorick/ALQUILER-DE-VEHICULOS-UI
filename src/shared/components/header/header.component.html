@@ -37,7 +37,7 @@
       [matMenuTriggerFor]="profileMenu"
     >
       <span class="profile-greeting">
-        Hola, <strong>{{ authService.usuarioActual()?.nombres || 'EMPLEADO' }}</strong>
+        Hola, <strong>{{ authService.usuarioActual()?.username || 'EMPLEADO' }}</strong>
       </span>
 
       <span class="avatar">

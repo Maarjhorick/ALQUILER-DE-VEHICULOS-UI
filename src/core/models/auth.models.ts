@@ -1,18 +1,18 @@
-export type RolUsuario = 'ADMIN' | 'EMPLEADO';
+export type RolUsuario = 'ADMIN' | 'CLIENTE' | 'EMPLEADO';
 
 export interface LoginRequest {
-  email: string;
+  username: string;
   password: string;
 }
 
 export interface UsuarioSesion {
-  id: number;
-  nombres: string;
-  email: string;
+  username: string;
   rol: RolUsuario;
 }
 
 export interface LoginResponse {
   token: string;
-  usuario: UsuarioSesion;
+  tipo: string;
+  username: string;
+  rol: RolUsuario;
 }
