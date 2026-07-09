@@ -22,10 +22,15 @@
             Nosotros
         </a>
 
-        <a mat-button routerLink="/contactanos" (click)="closeMenu()">
+        <a mat-button routerLink="/nosotros" fragment="contacto" (click)="closeMenu()">
             Contacto
         </a>
     </nav>
+
+    <a class="reserve-cta desktop-reserve" routerLink="/alquileres" (click)="closeMenu()">
+        <i class="fa-solid fa-calendar-check" aria-hidden="true"></i>
+        Reservar ahora
+    </a>
 
     <button
         mat-icon-button
@@ -61,7 +66,12 @@
         Nosotros
     </a>
 
-    <a mat-button routerLink="/contactanos" (click)="closeMenu()">
+    <a mat-button routerLink="/nosotros" fragment="contacto" (click)="closeMenu()">
         Contacto
+    </a>
+
+    <a class="reserve-cta mobile-reserve" routerLink="/alquileres" (click)="closeMenu()">
+        <i class="fa-solid fa-calendar-check" aria-hidden="true"></i>
+        Reservar ahora
     </a>
 </nav>

@@ -1,1 +1,284 @@
-<p>listar-alquileres works!</p>
+<section class="booking-hero">
+  <div class="booking-copy">
+    <span class="section-label">Reserva online</span>
+    <h1>Haz tu reserva de autos</h1>
+    <p>Completa cada paso para registrar la solicitud que luego se guardara en la base de datos y sera atendida por oficina.</p>
+  </div>
+
+  <ol class="booking-steps" aria-label="Pasos de reserva">
+    <li [class.active]="pasoActual === 1" [class.done]="pasosCompletados.ubicacion" (click)="irAlPaso(1)">
+      <span>1</span> Cuando y donde
+    </li>
+    <li [class.active]="pasoActual === 2" [class.done]="pasosCompletados.vehiculo" [class.locked]="!pasosCompletados.ubicacion" (click)="irAlPaso(2)">
+      <span>2</span> Vehiculo
+    </li>
+    <li [class.active]="pasoActual === 3" [class.done]="pasosCompletados.cliente" [class.locked]="!pasosCompletados.vehiculo" (click)="irAlPaso(3)">
+      <span>3</span> Datos y confirmacion
+    </li>
+  </ol>
+</section>
+
+<section class="booking-panel">
+  <form class="booking-form" #ubicacionForm="ngForm" (ngSubmit)="confirmarUbicacion(ubicacionForm)" *ngIf="pasoActual === 1">
+    <div class="form-section">
+      <div class="form-heading">
+        <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
+        <div>
+          <h2>Cuando y donde</h2>
+          <p>Define fechas, horarios y sedes para buscar autos disponibles.</p>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <label>
+          Fecha de recojo
+          <input type="date" name="fechaRecojo" [(ngModel)]="reserva.fechaRecojo" required>
+        </label>
+
+        <label>
+          Hora de recojo
+          <input type="time" name="horaRecojo" [(ngModel)]="reserva.horaRecojo" required>
+        </label>
+
+        <label>
+          Fecha de devolucion
+          <input type="date" name="fechaDevolucion" [(ngModel)]="reserva.fechaDevolucion" required>
+        </label>
+
+        <label>
+          Hora de devolucion
+          <input type="time" name="horaDevolucion" [(ngModel)]="reserva.horaDevolucion" required>
+        </label>
+
+        <label>
+          Lo recojo en
+          <select name="lugarRecojo" [(ngModel)]="reserva.lugarRecojo" required>
+            <option value="" disabled>Selecciona una sede</option>
+            <option value="Miraflores">Miraflores</option>
+            <option value="San Isidro">San Isidro</option>
+            <option value="Barranco">Barranco</option>
+            <option value="Aeropuerto Jorge Chavez">Aeropuerto Jorge Chavez</option>
+          </select>
+        </label>
+
+        <label>
+          Lo devuelvo en
+          <select name="lugarDevolucion" [(ngModel)]="reserva.lugarDevolucion" required>
+            <option value="" disabled>Selecciona una sede</option>
+            <option value="Miraflores">Miraflores</option>
+            <option value="San Isidro">San Isidro</option>
+            <option value="Barranco">Barranco</option>
+            <option value="Aeropuerto Jorge Chavez">Aeropuerto Jorge Chavez</option>
+          </select>
+        </label>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <p><i class="fa-solid fa-circle-info" aria-hidden="true"></i> Al confirmar, se habilitara el catalogo de autos disponibles.</p>
+      <button type="submit" [disabled]="ubicacionForm.invalid">
+        Continuar
+        <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+      </button>
+    </div>
+  </form>
+
+  <form class="booking-form" #vehiculoForm="ngForm" (ngSubmit)="confirmarVehiculo(vehiculoForm)" *ngIf="pasoActual === 2">
+    <div class="form-section">
+      <div class="form-heading">
+        <i class="fa-solid fa-car-side" aria-hidden="true"></i>
+        <div>
+          <h2>Vehiculo disponible</h2>
+          <p>Catalogo preparado para cargarse desde la base de datos con fotos, descuentos, categorias y caracteristicas.</p>
+        </div>
+      </div>
+
+      <input type="hidden" name="vehiculoId" [(ngModel)]="reserva.vehiculoId" required>
+
+      <div class="vehicle-grid">
+        <article
+          class="vehicle-card"
+          *ngFor="let vehiculo of vehiculosDisponibles"
+          [class.selected]="reserva.vehiculoId === vehiculo.id"
+          [class.unavailable]="!vehiculo.disponible"
+          (click)="seleccionarVehiculo(vehiculo)">
+          <div class="vehicle-image">
+            <img [src]="vehiculo.imagen" [alt]="vehiculo.nombre">
+            <span class="discount" *ngIf="vehiculo.descuento > 0">-{{ vehiculo.descuento }}%</span>
+            <span class="category">{{ vehiculo.categoria }}</span>
+          </div>
+
+          <div class="vehicle-body">
+            <div class="vehicle-title">
+              <h3>{{ vehiculo.nombre }}</h3>
+              <strong>S/ {{ vehiculo.precioDia }} <small>/ dia</small></strong>
+            </div>
+
+            <ul class="vehicle-meta">
+              <li><i class="fa-solid fa-gears" aria-hidden="true"></i> {{ vehiculo.transmision }}</li>
+              <li><i class="fa-solid fa-user-group" aria-hidden="true"></i> {{ vehiculo.pasajeros }} pasajeros</li>
+              <li><i class="fa-solid fa-suitcase" aria-hidden="true"></i> {{ vehiculo.maletas }} maletas</li>
+              <li><i class="fa-solid fa-gas-pump" aria-hidden="true"></i> {{ vehiculo.combustible }}</li>
+            </ul>
+
+            <div class="feature-list">
+              <span *ngFor="let caracteristica of vehiculo.caracteristicas">
+                <i class="fa-solid fa-check" aria-hidden="true"></i>
+                {{ caracteristica }}
+              </span>
+            </div>
+
+            <button type="button" class="select-car" [disabled]="!vehiculo.disponible">
+              <i class="fa-solid" [class.fa-circle-check]="reserva.vehiculoId === vehiculo.id" [class.fa-car]="reserva.vehiculoId !== vehiculo.id" aria-hidden="true"></i>
+              {{ reserva.vehiculoId === vehiculo.id ? 'Seleccionado' : 'Elegir auto' }}
+            </button>
+          </div>
+        </article>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="form-heading compact">
+        <i class="fa-solid fa-shield-halved" aria-hidden="true"></i>
+        <div>
+          <h2>Coberturas y extras</h2>
+          <p>Selecciona lo necesario antes de pasar a tus datos.</p>
+        </div>
+      </div>
+
+      <div class="options-grid">
+        <fieldset>
+          <legend>Cobertura</legend>
+          <label class="radio-option">
+            <input type="radio" name="cobertura" value="basica" [(ngModel)]="reserva.cobertura">
+            Basica
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="cobertura" value="extendida" [(ngModel)]="reserva.cobertura">
+            Extendida
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="cobertura" value="premium" [(ngModel)]="reserva.cobertura">
+            Premium
+          </label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Extras</legend>
+          <label class="check-option">
+            <input type="checkbox" name="sillaBebe" [(ngModel)]="reserva.extras.sillaBebe">
+            Silla para bebe
+          </label>
+          <label class="check-option">
+            <input type="checkbox" name="conductorAdicional" [(ngModel)]="reserva.extras.conductorAdicional">
+            Conductor adicional
+          </label>
+          <label class="check-option">
+            <input type="checkbox" name="gps" [(ngModel)]="reserva.extras.gps">
+            GPS
+          </label>
+        </fieldset>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="secondary-button" (click)="irAlPaso(1)">
+        <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+        Volver
+      </button>
+      <button type="submit" [disabled]="vehiculoForm.invalid || !reserva.vehiculoId">
+        Continuar
+        <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+      </button>
+    </div>
+  </form>
+
+  <form class="booking-form" #clienteForm="ngForm" (ngSubmit)="registrarReserva()" *ngIf="pasoActual === 3">
+    <div class="form-section">
+      <div class="form-heading">
+        <i class="fa-solid fa-user-check" aria-hidden="true"></i>
+        <div>
+          <h2>Datos y confirmacion</h2>
+          <p>Completa los datos requeridos para guardar la solicitud y que oficina pueda validarla.</p>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <label>
+          Nombres
+          <input type="text" name="nombres" [(ngModel)]="reserva.nombres" placeholder="Ej. Luis" required>
+        </label>
+
+        <label>
+          Apellidos
+          <input type="text" name="apellidos" [(ngModel)]="reserva.apellidos" placeholder="Ej. Ramirez Soto" required>
+        </label>
+
+        <label>
+          DNI o documento
+          <input type="text" name="documento" [(ngModel)]="reserva.documento" placeholder="Ej. 12345678" required>
+        </label>
+
+        <label>
+          Licencia de conducir
+          <input type="text" name="licencia" [(ngModel)]="reserva.licencia" placeholder="Ej. Q12345678" required>
+        </label>
+
+        <label>
+          Telefono
+          <input type="tel" name="telefono" [(ngModel)]="reserva.telefono" placeholder="+51 999 999 999" required>
+        </label>
+
+        <label>
+          Correo
+          <input type="email" name="correo" [(ngModel)]="reserva.correo" placeholder="cliente@correo.com" required>
+        </label>
+
+        <label class="full-row">
+          Direccion
+          <input type="text" name="direccion" [(ngModel)]="reserva.direccion" placeholder="Direccion de referencia" required>
+        </label>
+
+        <label class="full-row">
+          Comentarios
+          <textarea name="comentarios" [(ngModel)]="reserva.comentarios" rows="4" placeholder="Indica preferencias, horario exacto o detalles adicionales"></textarea>
+        </label>
+      </div>
+    </div>
+
+    <aside class="summary-card" *ngIf="vehiculoSeleccionado">
+      <h2><i class="fa-solid fa-clipboard-check" aria-hidden="true"></i> Resumen de reserva</h2>
+      <div class="summary-grid">
+        <span>Recojo</span>
+        <strong>{{ reserva.fechaRecojo }} - {{ reserva.horaRecojo }} | {{ reserva.lugarRecojo }}</strong>
+        <span>Devolucion</span>
+        <strong>{{ reserva.fechaDevolucion }} - {{ reserva.horaDevolucion }} | {{ reserva.lugarDevolucion }}</strong>
+        <span>Vehiculo</span>
+        <strong>{{ vehiculoSeleccionado.nombre }}</strong>
+        <span>Cobertura</span>
+        <strong>{{ reserva.cobertura }}</strong>
+      </div>
+    </aside>
+
+    <label class="terms-option">
+      <input type="checkbox" name="aceptaTerminos" [(ngModel)]="reserva.aceptaTerminos" required>
+      Acepto que PAUL CAR'S registre mis datos para gestionar esta solicitud de reserva.
+    </label>
+
+    <div class="form-actions">
+      <button type="button" class="secondary-button" (click)="irAlPaso(2)">
+        <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+        Volver
+      </button>
+      <button type="submit" [disabled]="clienteForm.invalid || !reserva.aceptaTerminos">
+        <i class="fa-solid fa-paper-plane" aria-hidden="true"></i>
+        Enviar solicitud
+      </button>
+    </div>
+
+    <div class="success-message" *ngIf="reservaRegistrada">
+      <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
+      Solicitud registrada en pantalla. El siguiente paso es enviarla al backend para guardarla en la base de datos.
+    </div>
+  </form>
+</section>

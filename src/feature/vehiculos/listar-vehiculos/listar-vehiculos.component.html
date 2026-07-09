@@ -1,1 +1,50 @@
-<p>listar-vehiculos works!</p>
+<section class="catalog-hero">
+  <span>Catalogo de autos</span>
+  <h1>Vehiculos disponibles</h1>
+  <p>Vista preparada para consumir el catalogo desde la base de datos: foto, descuento, categoria, precio y caracteristicas.</p>
+</section>
+
+<section class="catalog-section">
+  <div class="category-bar" aria-label="Categorias">
+    <button type="button" *ngFor="let categoria of categorias">
+      <i class="fa-solid fa-tag" aria-hidden="true"></i>
+      {{ categoria }}
+    </button>
+  </div>
+
+  <div class="catalog-grid">
+    <article class="vehicle-card" *ngFor="let vehiculo of vehiculos">
+      <div class="vehicle-image">
+        <img [src]="vehiculo.imagen" [alt]="vehiculo.nombre">
+        <span class="discount">-{{ vehiculo.descuento }}%</span>
+        <span class="category">{{ vehiculo.categoria }}</span>
+      </div>
+
+      <div class="vehicle-body">
+        <div class="vehicle-title">
+          <h2>{{ vehiculo.nombre }}</h2>
+          <strong>S/ {{ vehiculo.precioDia }} <small>/ dia</small></strong>
+        </div>
+
+        <ul class="vehicle-meta">
+          <li><i class="fa-solid fa-gears" aria-hidden="true"></i> {{ vehiculo.transmision }}</li>
+          <li><i class="fa-solid fa-user-group" aria-hidden="true"></i> {{ vehiculo.pasajeros }} pasajeros</li>
+          <li><i class="fa-solid fa-suitcase" aria-hidden="true"></i> {{ vehiculo.maletas }} maletas</li>
+          <li><i class="fa-solid fa-gas-pump" aria-hidden="true"></i> {{ vehiculo.combustible }}</li>
+        </ul>
+
+        <div class="feature-list">
+          <span *ngFor="let caracteristica of vehiculo.caracteristicas">
+            <i class="fa-solid fa-check" aria-hidden="true"></i>
+            {{ caracteristica }}
+          </span>
+        </div>
+
+        <a routerLink="/alquileres" class="reserve-link">
+          <i class="fa-solid fa-calendar-check" aria-hidden="true"></i>
+          Reservar este auto
+        </a>
+      </div>
+    </article>
+  </div>
+</section>
