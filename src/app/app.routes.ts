@@ -1,7 +1,6 @@
 import { Routes } from '@angular/router';
 import { HomeComponent } from '../feature/home/home.component';
 import { NosotrosComponent } from '../feature/nosotros/nosotros.component';
-import { ContactanosComponent } from '../feature/contactanos/contactanos.component';
 import { NotFoundComponent } from '../shared/components/not-found/not-found.component';
 import { MainLayoutComponent } from '../layouts/main-layout/main-layout.component';
 import { ListarVehiculosComponent } from '../feature/vehiculos/listar-vehiculos/listar-vehiculos.component';
@@ -38,11 +37,12 @@ export const routes: Routes = [
 
       {
         path: 'contacto',
-        component: ContactanosComponent
+        redirectTo: 'nosotros',
+        pathMatch: 'full'
       },
       {
         path: 'contactanos',
-        redirectTo: 'contacto',
+        redirectTo: 'nosotros',
         pathMatch: 'full'
       },
 
