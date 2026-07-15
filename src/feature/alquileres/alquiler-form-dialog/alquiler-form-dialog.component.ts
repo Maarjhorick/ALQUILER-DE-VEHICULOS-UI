@@ -1,16 +1,16 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 
 import { MatButtonModule } from '@angular/material/button';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatNativeDateModule } from '@angular/material/core';
+import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 
+import { Cliente } from '../../../core/models/cliente.model';
+import { Vehiculo } from '../../../core/models/vehiculo.model';
 import { ClienteService } from '../../../core/service/cliente.service';
 import { VehiculoService } from '../../../core/service/vehiculo.service';
-import { NuevoAlquiler } from '../../../core/service/alquiler.service';
 
 function rangoDeFechasValido(): ValidatorFn {
   return (group): ValidationErrors | null => {
@@ -23,6 +23,13 @@ function rangoDeFechasValido(): ValidatorFn {
   };
 }
 
+export interface NuevoAlquilerResultado {
+  idCliente: number;
+  idVehiculo: number;
+  fechaInicio: string;
+  fechaFin: string;
+}
+
 @Component({
   selector: 'app-alquiler-form-dialog',
   imports: [
@@ -30,32 +37,29 @@ function rangoDeFechasValido(): ValidatorFn {
     MatDialogModule,
     MatButtonModule,
     MatFormFieldModule,
-    MatSelectModule,
-    MatDatepickerModule,
-    MatNativeDateModule
+    MatInputModule,
+    MatSelectModule
   ],
   templateUrl: './alquiler-form-dialog.component.html',
   styleUrl: './alquiler-form-dialog.component.css'
 })
-export class AlquilerFormDialogComponent {
+export class AlquilerFormDialogComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly dialogRef = inject(MatDialogRef<AlquilerFormDialogComponent>);
   private readonly clienteService = inject(ClienteService);
   private readonly vehiculoService = inject(VehiculoService);
-  readonly data = inject(MAT_DIALOG_DATA, { optional: true });
 
-  readonly clientes = this.clienteService.clientes;
+  clientes: Cliente[] | null = null;
+  vehiculosDisponibles: Vehiculo[] | null = null;
 
-  readonly vehiculosDisponibles = computed(() =>
-    this.vehiculoService.vehiculos().filter((v) => v.estado?.nombreEstado === 'DISPONIBLE')
-  );
+  readonly hoy = new Date().toISOString().slice(0, 10);
 
   form = this.fb.nonNullable.group(
     {
       clienteId: [null as number | null, [Validators.required]],
       vehiculoId: [null as number | null, [Validators.required]],
-      fechaInicio: [null as Date | null, [Validators.required]],
-      fechaFin: [null as Date | null, [Validators.required]]
+      fechaInicio: ['', [Validators.required]],
+      fechaFin: ['', [Validators.required]]
     },
     { validators: rangoDeFechasValido() }
   );
@@ -66,9 +70,21 @@ export class AlquilerFormDialogComponent {
     this.form.valueChanges.subscribe(() => this.calcularTotal());
   }
 
+  ngOnInit(): void {
+    this.clienteService.listarTodos().subscribe({
+      next: (data) => (this.clientes = data),
+      error: (err) => console.error('Error cargando clientes:', err)
+    });
+
+    this.vehiculoService.listarTodos().subscribe({
+      next: (data) => (this.vehiculosDisponibles = data.filter((v) => v.estado?.nombreEstado === 'DISPONIBLE')),
+      error: (err) => console.error('Error cargando vehículos:', err)
+    });
+  }
+
   private calcularTotal(): void {
     const { vehiculoId, fechaInicio, fechaFin } = this.form.getRawValue();
-    const vehiculo = this.vehiculosDisponibles().find((v) => v.idVehiculo === vehiculoId);
+    const vehiculo = this.vehiculosDisponibles?.find((v) => v.idVehiculo === vehiculoId);
 
     if (!vehiculo || !fechaInicio || !fechaFin) {
       this.totalEstimado.set(0);
@@ -90,19 +106,14 @@ export class AlquilerFormDialogComponent {
     }
 
     const { clienteId, vehiculoId, fechaInicio, fechaFin } = this.form.getRawValue();
-    const cliente = this.clientes().find((c) => c.id === clienteId);
-    const vehiculo = this.vehiculosDisponibles().find((v) => v.idVehiculo === vehiculoId);
 
-    if (!cliente || !vehiculo || !fechaInicio || !fechaFin) return;
+    if (!clienteId || !vehiculoId || !fechaInicio || !fechaFin) return;
 
-    const resultado: NuevoAlquiler = {
-      clienteId: cliente.id,
-      clienteNombre: `${cliente.nombres} ${cliente.apellidos}`,
-      vehiculoId: vehiculo.idVehiculo!,
-      vehiculoNombre: `${vehiculo.modelo?.marca?.nombreMarca} ${vehiculo.modelo?.modelo}`,
-      fechaInicio: new Date(fechaInicio).toISOString().slice(0, 10),
-      fechaFin: new Date(fechaFin).toISOString().slice(0, 10),
-      total: this.totalEstimado()
+    const resultado: NuevoAlquilerResultado = {
+      idCliente: clienteId,
+      idVehiculo: vehiculoId,
+      fechaInicio,
+      fechaFin
     };
 
     this.dialogRef.close(resultado);

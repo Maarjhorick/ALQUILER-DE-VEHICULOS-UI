@@ -55,7 +55,7 @@ export class LoginComponent {
 
     this.authService.login(this.loginForm.getRawValue()).subscribe({
       next: (response) => {
-        const destino = (response.rol === 'EMPLEADO' || response.rol === 'ADMIN') ? '/empleado' : '/';
+        const destino = response.rol === 'ADMIN' ? '/admin' : response.rol === 'EMPLEADO' ? '/empleado' : '/';
 
     this.router.navigate([destino]).then((exito) => {
       this.cargando = false;

@@ -1,8 +1,7 @@
-import { NgClass } from '@angular/common';
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 
 import { MatButtonModule } from '@angular/material/button';
-import { MatChipsModule } from '@angular/material/chips';
+import { MatChipListbox, MatChipOption } from '@angular/material/chips';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -19,15 +18,15 @@ import {
 } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { VehiculoFormDialogComponent } from '../vehiculo-form-dialog/vehiculo-form-dialog.component';
 import { BackButtonComponent } from '../../../shared/components/back-button/back-button.component';
+import { AuthService } from '../../../core/service/auth.service';
 
 type FiltroEstado = 'TODOS' | string;
 
 @Component({
   selector: 'app-listar-vehiculos',
+  standalone: true,
   imports: [
-    NgClass,
     MatButtonModule,
-    MatChipsModule,
     MatDialogModule,
     MatFormFieldModule,
     MatIconModule,
@@ -35,15 +34,20 @@ type FiltroEstado = 'TODOS' | string;
     MatSnackBarModule,
     MatTableModule,
     MatTooltipModule,
-    BackButtonComponent
-  ],
+    BackButtonComponent,
+    MatChipListbox,
+    MatChipOption
+],
   templateUrl: './listar-vehiculos.component.html',
-  styleUrls: ['./listar-vehiculos.component.css']
+  styleUrl: './listar-vehiculos.component.css' 
 })
 export class ListarVehiculosComponent implements OnInit {
   private readonly vehiculoService = inject(VehiculoService);
   private readonly dialog = inject(MatDialog);
+  private readonly authService = inject(AuthService);
   private readonly snackBar = inject(MatSnackBar);
+
+  readonly esAdmin = computed(() => this.authService.rolActual() === 'ADMIN');
 
   readonly columnas = ['vehiculo', 'placa', 'tipo', 'anio', 'precio', 'estado', 'acciones'];
 
@@ -57,7 +61,7 @@ export class ListarVehiculosComponent implements OnInit {
     const estado = this.filtroEstado();
 
     return this.vehiculos().filter((v) => {
-      const marcaModelo = `${v.modelo?.marca?.nombreMarca ?? ''} ${v.modelo?.modelo ?? ''} ${v.placa}`.toLowerCase();
+      const marcaModelo = `${v.modelo?.marca?.nombreMarca ?? ''} ${v.modelo?.modelo ?? ''} ${v.placa ?? ''}`.toLowerCase();
       const coincideTexto = !texto || marcaModelo.includes(texto);
       const coincideEstado = estado === 'TODOS' || v.estado?.nombreEstado === estado;
       return coincideTexto && coincideEstado;
@@ -144,5 +148,39 @@ export class ListarVehiculosComponent implements OnInit {
       default:
         return 'estado-alquilado';
     }
+  }
+
+  iconoPorTipo(nombreTipo?: string): string {
+    switch ((nombreTipo ?? '').toUpperCase()) {
+      case 'SUV':
+        return 'directions_car_filled';
+      case 'PICKUP':
+        return 'local_shipping';
+      case 'HATCHBACK':
+        return 'time_to_leave';
+      case 'SEDAN':
+      default:
+        return 'directions_car';
+    }
+  }
+
+  private readonly coloresConocidos: Record<string, string> = {
+    blanco: '#eef1f5',
+    negro: '#dfe3e8',
+    gris: '#e4e7ec',
+    plomo: '#e4e7ec',
+    plata: '#e9edf2',
+    rojo: '#fde2e1',
+    azul: '#dfeaff',
+    verde: '#e1f5ea',
+    amarillo: '#fff6d9',
+    naranja: '#ffe8d6',
+    marron: '#efe3d6',
+    beige: '#f4efe4'
+  };
+
+  colorFondo(color?: string): string {
+    const clave = (color ?? '').trim().toLowerCase();
+    return this.coloresConocidos[clave] ?? '#e8f1ff';
   }
 }

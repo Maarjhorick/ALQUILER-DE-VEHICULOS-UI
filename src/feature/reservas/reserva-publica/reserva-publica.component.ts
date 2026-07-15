@@ -68,20 +68,18 @@ export class ReservaPublicaComponent {
     this.clienteService.agregar({
       nombres: this.reserva.nombres,
       apellidos: this.reserva.apellidos,
-      dni: this.reserva.dni,
       email: this.reserva.email,
       telefono: this.reserva.telefono,
-      direccion: this.reserva.direccion
+      tipoDocumento: 'DNI',
+      numeroDocumento: this.reserva.dni,
+      licenciaConducir: ''
     }).subscribe((cliente) => {
-      this.alquilerService.agregar({
-        clienteId: cliente.id,
-        clienteNombre: `${cliente.nombres} ${cliente.apellidos}`,
-        vehiculoId:  vehiculo.idVehiculo!,
-        vehiculoNombre: `${vehiculo.modelo?.marca?.nombreMarca ?? ''} ${vehiculo.modelo?.modelo ?? ''}`.trim(),
-        fechaInicio: this.reserva.fechaInicio,
-        fechaFin: this.reserva.fechaFin,
-        total: this.calcularTotal()
-      }).subscribe(() => {
+      this.alquilerService.agregar(
+        cliente.idCliente!,
+        vehiculo.idVehiculo!,
+        this.reserva.fechaInicio,
+        this.reserva.fechaFin
+      ).subscribe(() => {
         this.enviado.set(true);
         form.resetForm();
       });

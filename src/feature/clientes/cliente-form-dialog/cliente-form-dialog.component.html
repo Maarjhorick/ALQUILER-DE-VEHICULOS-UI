@@ -23,16 +23,27 @@
 
       <div class="grid-2">
         <mat-form-field appearance="outline">
-          <mat-label>DNI</mat-label>
-          <input matInput formControlName="dni" placeholder="71234567" maxlength="8">
-          @if (form.controls.dni.hasError('required') && form.controls.dni.touched) {
-            <mat-error>El DNI es obligatorio.</mat-error>
-          }
-          @if (form.controls.dni.hasError('pattern') && form.controls.dni.touched) {
-            <mat-error>El DNI debe tener 8 dígitos.</mat-error>
-          }
+          <mat-label>Tipo de documento</mat-label>
+          <mat-select formControlName="tipoDocumento">
+            <mat-option value="DNI">DNI</mat-option>
+            <mat-option value="CARNET_EXTRANJERIA">Carnet de extranjería</mat-option>
+            <mat-option value="PASAPORTE">Pasaporte</mat-option>
+          </mat-select>
         </mat-form-field>
 
+        <mat-form-field appearance="outline">
+          <mat-label>Número de documento</mat-label>
+          <input matInput formControlName="numeroDocumento" placeholder="71234567" maxlength="8">
+          @if (form.controls.numeroDocumento.hasError('required') && form.controls.numeroDocumento.touched) {
+            <mat-error>El número de documento es obligatorio.</mat-error>
+          }
+          @if (form.controls.numeroDocumento.hasError('pattern') && form.controls.numeroDocumento.touched) {
+            <mat-error>Debe tener 8 dígitos.</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <div class="grid-2">
         <mat-form-field appearance="outline">
           <mat-label>Teléfono</mat-label>
           <input matInput formControlName="telefono" placeholder="987654321" maxlength="9">
@@ -41,6 +52,14 @@
           }
           @if (form.controls.telefono.hasError('pattern') && form.controls.telefono.touched) {
             <mat-error>Ingresa 9 dígitos válidos.</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Licencia de conducir</mat-label>
+          <input matInput formControlName="licenciaConducir" placeholder="Q12345678">
+          @if (form.controls.licenciaConducir.hasError('required') && form.controls.licenciaConducir.touched) {
+            <mat-error>La licencia es obligatoria.</mat-error>
           }
         </mat-form-field>
       </div>
@@ -53,14 +72,6 @@
         }
         @if (form.controls.email.hasError('email') && form.controls.email.touched) {
           <mat-error>Ingresa un correo válido.</mat-error>
-        }
-      </mat-form-field>
-
-      <mat-form-field appearance="outline" class="full">
-        <mat-label>Dirección</mat-label>
-        <input matInput formControlName="direccion" placeholder="Av. Ejemplo 123, Lima">
-        @if (form.controls.direccion.hasError('required') && form.controls.direccion.touched) {
-          <mat-error>La dirección es obligatoria.</mat-error>
         }
       </mat-form-field>
     </mat-dialog-content>

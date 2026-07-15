@@ -19,8 +19,6 @@ import { AuthService } from '../../../core/service/auth.service';
 export class BackButtonComponent {
   private readonly authService = inject(AuthService);
 
-  // Hoy solo existe el rol EMPLEADO; cuando construyas la vista de ADMIN
-  // este mismo componente ya sabrá mandarlo a "/admin" sin tocar nada más.
   readonly panelUrl = computed(() =>
     this.authService.rolActual() === 'ADMIN' ? '/admin' : '/empleado'
   );

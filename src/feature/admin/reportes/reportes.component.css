@@ -1,0 +1,157 @@
+.page {
+  width: min(1180px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 36px 0 56px;
+}
+
+.page-header {
+  margin-bottom: 24px;
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  color: var(--brand-blue, #1565c0);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 13px;
+}
+
+h1 {
+  margin: 0;
+  color: #111827;
+  font-size: 32px;
+  font-weight: 800;
+}
+
+.description {
+  max-width: 620px;
+  margin: 8px 0 0;
+  color: #667085;
+  font-size: 15px;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+.summary-card {
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+  padding: 22px;
+  display: grid;
+  gap: 8px;
+}
+
+.summary-card mat-icon {
+  color: var(--brand-blue, #1565c0);
+}
+
+.summary-card strong {
+  font-size: 1.9rem;
+  color: #111827;
+}
+
+.summary-card.alerta-activa mat-icon,
+.summary-card.alerta-activa strong {
+  color: #c0392b;
+}
+
+.metodo-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.metodo-chip {
+  background: #e8f1ff;
+  color: #1565c0;
+  font-weight: 600;
+  font-size: 13px;
+  padding: 6px 14px;
+  border-radius: 999px;
+}
+
+.section-card {
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+  padding: 24px;
+  margin-bottom: 20px;
+}
+
+.section-card h2 {
+  margin: 0 0 4px;
+  font-size: 20px;
+  color: #111827;
+}
+
+.subtitulo {
+  margin: 0 0 16px;
+  color: #667085;
+  font-size: 14px;
+}
+
+.filtro-fechas {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 16px 0;
+}
+
+.resultado-periodo {
+  display: flex;
+  gap: 32px;
+  padding-top: 8px;
+  border-top: 1px solid #eef1f5;
+}
+
+.resultado-periodo div {
+  display: grid;
+  gap: 4px;
+}
+
+.resultado-periodo span {
+  color: #667085;
+  font-size: 13px;
+}
+
+.resultado-periodo strong {
+  font-size: 1.4rem;
+  color: #111827;
+}
+
+table {
+  width: 100%;
+  margin-top: 8px;
+}
+
+th.mat-mdc-header-cell {
+  color: #667085;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  background: #f8fafc;
+}
+
+td.mat-mdc-cell {
+  color: #111827;
+  font-size: 14.5px;
+}
+
+.vacio {
+  color: #98a2b3;
+  font-size: 14px;
+  padding: 12px 0;
+}
+
+@media (max-width: 900px) {
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,54 @@
+<div class="usuario-dialog">
+  <h2 mat-dialog-title>Nuevo usuario</h2>
+
+  <form [formGroup]="form" (ngSubmit)="guardar()">
+    <mat-dialog-content>
+      <mat-form-field appearance="outline" class="full">
+        <mat-label>Nombre de usuario</mat-label>
+        <input matInput formControlName="username" placeholder="stefano">
+        @if (form.controls.username.hasError('required') && form.controls.username.touched) {
+          <mat-error>El nombre de usuario es obligatorio.</mat-error>
+        }
+        @if (form.controls.username.hasError('minlength') && form.controls.username.touched) {
+          <mat-error>Debe tener al menos 3 caracteres.</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full">
+        <mat-label>Contraseña</mat-label>
+        <input matInput type="password" formControlName="password">
+        @if (form.controls.password.hasError('required') && form.controls.password.touched) {
+          <mat-error>La contraseña es obligatoria.</mat-error>
+        }
+        @if (form.controls.password.hasError('minlength') && form.controls.password.touched) {
+          <mat-error>Debe tener al menos 6 caracteres.</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full">
+        <mat-label>Rol</mat-label>
+        <mat-select formControlName="rolNombre">
+          @for (rol of roles; track rol.idRol) {
+            <mat-option [value]="rol.nombreRol">{{ rol.nombreRol }}</mat-option>
+          }
+        </mat-select>
+        @if (roles && roles.length === 0) {
+          <mat-hint>No hay roles ADMIN/EMPLEADO configurados.</mat-hint>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full">
+        <mat-label>Correo de recuperación (opcional)</mat-label>
+        <input matInput type="email" formControlName="emailRecuperacion" placeholder="usuario@correo.com">
+        @if (form.controls.emailRecuperacion.hasError('email') && form.controls.emailRecuperacion.touched) {
+          <mat-error>Ingresa un correo válido.</mat-error>
+        }
+      </mat-form-field>
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end">
+      <button mat-stroked-button type="button" (click)="cancelar()">Cancelar</button>
+      <button mat-flat-button color="primary" type="submit">Crear usuario</button>
+    </mat-dialog-actions>
+  </form>
+</div>

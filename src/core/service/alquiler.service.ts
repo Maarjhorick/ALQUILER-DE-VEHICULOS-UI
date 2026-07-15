@@ -1,71 +1,50 @@
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 import { Injectable, inject, signal } from '@angular/core';
-import { Observable, delay, of } from 'rxjs';
-import { Alquiler, EstadoAlquiler } from '../models/alquiler.model';
-import { VehiculoService } from './vehiculo.service';
+import { Observable, tap } from 'rxjs';
 
-// TODO: reemplazar el arreglo en memoria por llamadas HTTP a
-// `${apiUrl}/alquileres` cuando el back de Spring Boot esté disponible.
-
-export interface NuevoAlquiler {
-  clienteId: number;
-  clienteNombre: string;
-  vehiculoId: number;
-  vehiculoNombre: string;
-  fechaInicio: string;
-  fechaFin: string;
-  total: number;
-}
+import { Alquiler } from '../models/alquiler.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AlquilerService {
-  private readonly vehiculoService = inject(VehiculoService);
+  private readonly http = inject(HttpClient);
+private readonly apiUrl = `${environment.apiUrl}/alquileres`;
 
-  private readonly _alquileres = signal<Alquiler[]>([
-    { id: 1, clienteId: 1, clienteNombre: 'Marjhorick Ventura', vehiculoId: 2, vehiculoNombre: 'Hyundai Tucson', fechaInicio: '2026-07-01', fechaFin: '2026-07-05', estado: 'ACTIVO', total: 720 },
-    { id: 2, clienteId: 2, clienteNombre: 'Ana Torres', vehiculoId: 6, vehiculoNombre: 'Toyota Hilux', fechaInicio: '2026-06-20', fechaFin: '2026-06-25', estado: 'FINALIZADO', total: 1100 },
-    { id: 3, clienteId: 3, clienteNombre: 'Luis Ramírez', vehiculoId: 1, vehiculoNombre: 'Toyota Yaris', fechaInicio: '2026-07-10', fechaFin: '2026-07-12', estado: 'ACTIVO', total: 240 }
-  ]);
+  private readonly alquileresSignal = signal<Alquiler[]>([]);
+  readonly alquileres = this.alquileresSignal.asReadonly();
 
-  readonly alquileres = this._alquileres.asReadonly();
-
-  listar(): Observable<Alquiler[]> {
-    return of(this._alquileres()).pipe(delay(300));
+  cargar(): void {
+    this.http.get<Alquiler[]>(this.apiUrl).subscribe({
+      next: (data) => this.alquileresSignal.set(data),
+      error: (err) => console.error('Error cargando alquileres:', err)
+    });
   }
 
-  agregar(datos: NuevoAlquiler): Observable<Alquiler> {
-    const nuevo: Alquiler = {
-      ...datos,
-      id: this.generarId(),
-      estado: 'ACTIVO'
-    };
+  agregar(idCliente: number, idVehiculo: number, fechaInicio: string, fechaFin: string): Observable<Alquiler> {
+    const params = new HttpParams()
+      .set('idCliente', idCliente)
+      .set('idVehiculo', idVehiculo)
+      .set('inicio', fechaInicio)
+      .set('fin', fechaFin);
 
-    this._alquileres.update((lista) => [nuevo, ...lista]);
-    this.vehiculoService.cambiarEstado(datos.vehiculoId, 'ALQUILADO');
-
-    return of(nuevo).pipe(delay(300));
-  }
-
-  cambiarEstado(id: number, estado: EstadoAlquiler): void {
-    const alquiler = this._alquileres().find((a) => a.id === id);
-
-    this._alquileres.update((lista) =>
-      lista.map((a) => (a.id === id ? { ...a, estado } : a))
+    return this.http.post<Alquiler>(this.apiUrl, null, { params }).pipe(
+      tap(() => this.cargar())
     );
-
-    if (alquiler && (estado === 'FINALIZADO' || estado === 'CANCELADO')) {
-      this.vehiculoService.cambiarEstado(alquiler.vehiculoId, 'DISPONIBLE');
-    }
   }
 
-  eliminar(id: number): Observable<boolean> {
-    this._alquileres.update((lista) => lista.filter((a) => a.id !== id));
-    return of(true).pipe(delay(200));
+  finalizar(idAlquiler: number, fechaFinReal: string): Observable<Alquiler> {
+    const params = new HttpParams().set('fechaFinReal', fechaFinReal);
+
+    return this.http.put<Alquiler>(`${this.apiUrl}/${idAlquiler}/finalizar`, null, { params }).pipe(
+      tap(() => this.cargar())
+    );
   }
 
-  private generarId(): number {
-    const ids = this._alquileres().map((a) => a.id);
-    return (ids.length ? Math.max(...ids) : 0) + 1;
+  cancelar(idAlquiler: number): Observable<Alquiler> {
+    return this.http.put<Alquiler>(`${this.apiUrl}/${idAlquiler}/cancelar`, null).pipe(
+      tap(() => this.cargar())
+    );
   }
 }

@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
@@ -11,16 +11,16 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
-import { Alquiler, EstadoAlquiler } from '../../../core/models/alquiler.model';
+import { Alquiler } from '../../../core/models/alquiler.model';
 import { AlquilerService } from '../../../core/service/alquiler.service';
 import {
   ConfirmDialogComponent,
   ConfirmDialogData
 } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
-import { AlquilerFormDialogComponent } from '../alquiler-form-dialog/alquiler-form-dialog.component';
+import { AlquilerFormDialogComponent, NuevoAlquilerResultado } from '../alquiler-form-dialog/alquiler-form-dialog.component';
 import { BackButtonComponent } from '../../../shared/components/back-button/back-button.component';
 
-type FiltroEstado = 'TODOS' | EstadoAlquiler;
+type FiltroEstado = 'TODOS' | 'ACTIVO' | 'FINALIZADO' | 'CANCELADO';
 
 @Component({
   selector: 'app-listar-alquileres',
@@ -40,12 +40,12 @@ type FiltroEstado = 'TODOS' | EstadoAlquiler;
   templateUrl: './listar-alquileres.component.html',
   styleUrl: './listar-alquileres.component.css'
 })
-export class ListarAlquileresComponent {
+export class ListarAlquileresComponent implements OnInit {
   private readonly alquilerService = inject(AlquilerService);
   private readonly dialog = inject(MatDialog);
   private readonly snackBar = inject(MatSnackBar);
 
-  readonly columnas = ['cliente', 'vehiculo', 'fechas', 'total', 'estado', 'acciones'];
+  readonly columnas = ['cliente', 'vehiculo', 'fechas', 'estado', 'acciones'];
 
   readonly busqueda = signal('');
   readonly filtroEstado = signal<FiltroEstado>('TODOS');
@@ -57,13 +57,17 @@ export class ListarAlquileresComponent {
     const estado = this.filtroEstado();
 
     return this.alquileres().filter((a) => {
-      const coincideTexto =
-        !texto ||
-        `${a.clienteNombre} ${a.vehiculoNombre}`.toLowerCase().includes(texto);
-      const coincideEstado = estado === 'TODOS' || a.estado === estado;
+      const nombreCliente = `${a.cliente?.nombres ?? ''} ${a.cliente?.apellidos ?? ''}`;
+      const nombreVehiculo = `${a.vehiculo?.modelo?.marca?.nombreMarca ?? ''} ${a.vehiculo?.modelo?.modelo ?? ''}`;
+      const coincideTexto = !texto || `${nombreCliente} ${nombreVehiculo}`.toLowerCase().includes(texto);
+      const coincideEstado = estado === 'TODOS' || a.estado?.nombreEstado === estado;
       return coincideTexto && coincideEstado;
     });
   });
+
+  ngOnInit(): void {
+    this.alquilerService.cargar();
+  }
 
   buscar(valor: string): void {
     this.busqueda.set(valor);
@@ -78,19 +82,22 @@ export class ListarAlquileresComponent {
       width: '600px'
     });
 
-    ref.afterClosed().subscribe((resultado) => {
+    ref.afterClosed().subscribe((resultado: NuevoAlquilerResultado | undefined) => {
       if (!resultado) return;
 
-      this.alquilerService.agregar(resultado).subscribe(() => {
-        this.snackBar.open('Alquiler registrado correctamente', 'Cerrar', { duration: 2500 });
-      });
+      this.alquilerService
+        .agregar(resultado.idCliente, resultado.idVehiculo, resultado.fechaInicio, resultado.fechaFin)
+        .subscribe({
+          next: () => this.snackBar.open('Alquiler registrado correctamente', 'Cerrar', { duration: 2500 }),
+          error: (err) => this.mostrarError(err, 'registrar el alquiler')
+        });
     });
   }
 
   finalizar(alquiler: Alquiler): void {
     const data: ConfirmDialogData = {
       titulo: 'Finalizar alquiler',
-      mensaje: `¿Marcar como finalizado el alquiler de ${alquiler.clienteNombre}? El vehículo quedará disponible nuevamente.`,
+      mensaje: `¿Marcar como finalizado el alquiler de ${alquiler.cliente?.nombres} ${alquiler.cliente?.apellidos}? El vehículo quedará disponible nuevamente.`,
       textoConfirmar: 'Finalizar'
     };
 
@@ -99,15 +106,19 @@ export class ListarAlquileresComponent {
     ref.afterClosed().subscribe((confirmado) => {
       if (!confirmado) return;
 
-      this.alquilerService.cambiarEstado(alquiler.id, 'FINALIZADO');
-      this.snackBar.open('Alquiler finalizado', 'Cerrar', { duration: 2500 });
+      const hoy = new Date().toISOString().slice(0, 10);
+
+      this.alquilerService.finalizar(alquiler.idAlquiler!, hoy).subscribe({
+        next: () => this.snackBar.open('Alquiler finalizado', 'Cerrar', { duration: 2500 }),
+        error: (err) => this.mostrarError(err, 'finalizar el alquiler')
+      });
     });
   }
 
   cancelar(alquiler: Alquiler): void {
     const data: ConfirmDialogData = {
       titulo: 'Cancelar alquiler',
-      mensaje: `¿Seguro que deseas cancelar el alquiler de ${alquiler.clienteNombre}?`,
+      mensaje: `¿Seguro que deseas cancelar el alquiler de ${alquiler.cliente?.nombres} ${alquiler.cliente?.apellidos}?`,
       textoConfirmar: 'Cancelar alquiler'
     };
 
@@ -116,30 +127,15 @@ export class ListarAlquileresComponent {
     ref.afterClosed().subscribe((confirmado) => {
       if (!confirmado) return;
 
-      this.alquilerService.cambiarEstado(alquiler.id, 'CANCELADO');
-      this.snackBar.open('Alquiler cancelado', 'Cerrar', { duration: 2500 });
-    });
-  }
-
-  eliminar(alquiler: Alquiler): void {
-    const data: ConfirmDialogData = {
-      titulo: 'Eliminar alquiler',
-      mensaje: `¿Deseas eliminar el registro del alquiler de ${alquiler.clienteNombre}? Esta acción no se puede deshacer.`
-    };
-
-    const ref = this.dialog.open(ConfirmDialogComponent, { data, width: '420px' });
-
-    ref.afterClosed().subscribe((confirmado) => {
-      if (!confirmado) return;
-
-      this.alquilerService.eliminar(alquiler.id).subscribe(() => {
-        this.snackBar.open('Alquiler eliminado', 'Cerrar', { duration: 2500 });
+      this.alquilerService.cancelar(alquiler.idAlquiler!).subscribe({
+        next: () => this.snackBar.open('Alquiler cancelado', 'Cerrar', { duration: 2500 }),
+        error: (err) => this.mostrarError(err, 'cancelar el alquiler')
       });
     });
   }
 
-  claseEstado(estado: EstadoAlquiler): string {
-    switch (estado) {
+  claseEstado(nombreEstado: string | undefined): string {
+    switch (nombreEstado) {
       case 'ACTIVO':
         return 'estado-activo';
       case 'FINALIZADO':
@@ -147,5 +143,44 @@ export class ListarAlquileresComponent {
       default:
         return 'estado-cancelado';
     }
+  }
+
+  private mostrarError(err: any, accion: string): void {
+    const mensaje = err?.error?.message || err?.error || `No se pudo ${accion}.`;
+    this.snackBar.open(typeof mensaje === 'string' ? mensaje : `No se pudo ${accion}.`, 'Cerrar', { duration: 3500 });
+  }
+
+  iconoPorTipo(nombreTipo?: string): string {
+    switch ((nombreTipo ?? '').toUpperCase()) {
+      case 'SUV':
+        return 'directions_car_filled';
+      case 'PICKUP':
+        return 'local_shipping';
+      case 'HATCHBACK':
+        return 'time_to_leave';
+      case 'SEDAN':
+      default:
+        return 'directions_car';
+    }
+  }
+
+  private readonly coloresConocidos: Record<string, string> = {
+    blanco: '#eef1f5',
+    negro: '#dfe3e8',
+    gris: '#e4e7ec',
+    plomo: '#e4e7ec',
+    plata: '#e9edf2',
+    rojo: '#fde2e1',
+    azul: '#dfeaff',
+    verde: '#e1f5ea',
+    amarillo: '#fff6d9',
+    naranja: '#ffe8d6',
+    marron: '#efe3d6',
+    beige: '#f4efe4'
+  };
+
+  colorFondo(color?: string): string {
+    const clave = (color ?? '').trim().toLowerCase();
+    return this.coloresConocidos[clave] ?? '#e8f1ff';
   }
 }

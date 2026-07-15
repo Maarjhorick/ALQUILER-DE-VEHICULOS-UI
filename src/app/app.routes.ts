@@ -18,6 +18,9 @@ import { authGuard } from '../core/guard/auth.guard';
 import { DashboardAdminComponent } from '../feature/admin/dashboard-admin/dashboard-admin.component';
 import { DashboardClienteComponent } from '../feature/cliente/dashboard-cliente/dashboard-cliente.component';
 import { ReservaPublicaComponent } from '../feature/reservas/reserva-publica/reserva-publica.component';
+import { ListarUsuariosComponent } from '../feature/admin/usuarios/listar-usuarios/listar-usuarios.component';
+import { ReportesComponent } from '../feature/admin/reportes/reportes.component';
+import { CatalogoBaseComponent } from '../feature/admin/catalogo-base/catalogo-base.component';
 
 export const routes: Routes = [
   {
@@ -43,11 +46,29 @@ export const routes: Routes = [
       path: 'empleado',
       component: DashboardEmpleadoComponent,
       canActivate: [authGuard],
-      //data: { roles: ['ADMIN', 'EMPLEADO'] }
+      data: { roles: ['ADMIN', 'EMPLEADO'] }
       },
       {
         path: 'admin',
         component: DashboardAdminComponent,
+        canActivate: [authGuard],
+        data: { roles: ['ADMIN'] }
+      },
+      {
+        path: 'admin/usuarios',
+        component: ListarUsuariosComponent,
+        canActivate: [authGuard],
+        data: { roles: ['ADMIN'] }
+      },
+      {
+        path: 'admin/reportes',
+        component: ReportesComponent,
+        canActivate: [authGuard],
+        data: { roles: ['ADMIN'] }
+      },
+      {
+        path: 'admin/catalogo',
+        component: CatalogoBaseComponent,
         canActivate: [authGuard],
         data: { roles: ['ADMIN'] }
       },

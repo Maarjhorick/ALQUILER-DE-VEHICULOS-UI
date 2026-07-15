@@ -1,0 +1,98 @@
+.page {
+  width: min(1000px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 36px 0 56px;
+}
+
+.page-header {
+  margin-bottom: 24px;
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  color: var(--brand-blue, #1565c0);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 13px;
+}
+
+h1 {
+  margin: 0;
+  color: #111827;
+  font-size: 32px;
+  font-weight: 800;
+}
+
+.description {
+  max-width: 620px;
+  margin: 8px 0 0;
+  color: #667085;
+  font-size: 15px;
+}
+
+.vacio {
+  color: #98a2b3;
+  font-size: 14px;
+}
+
+.tabs-card {
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+  overflow: hidden;
+}
+
+.tab-content {
+  padding: 24px;
+}
+
+.form-agregar {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.lista-catalogo {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.lista-catalogo li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 10px;
+}
+
+.lista-catalogo li:hover {
+  background: #f8fafc;
+}
+
+.lista-catalogo li span:first-of-type {
+  flex: 1;
+  color: #111827;
+  font-size: 14.5px;
+}
+
+.secundario {
+  color: #98a2b3;
+  font-size: 13px;
+}
+
+.edicion-field {
+  flex: 1;
+}
+
+@media (max-width: 700px) {
+  .form-agregar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

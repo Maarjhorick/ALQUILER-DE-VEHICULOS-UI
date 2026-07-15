@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, OnInit, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { MatButtonModule } from '@angular/material/button';
@@ -16,7 +16,7 @@ import { VehiculoService } from '../../../core/service/vehiculo.service';
   templateUrl: './dashboard-admin.component.html',
   styleUrl: './dashboard-admin.component.css'
 })
-export class DashboardAdminComponent {
+export class DashboardAdminComponent implements OnInit {
   private readonly vehiculoService = inject(VehiculoService);
   private readonly clienteService = inject(ClienteService);
   private readonly alquilerService = inject(AlquilerService);
@@ -24,6 +24,12 @@ export class DashboardAdminComponent {
   readonly vehiculos = computed(() => this.vehiculoService.vehiculos().length);
   readonly clientes = computed(() => this.clienteService.clientes().length);
   readonly alquileresActivos = computed(
-    () => this.alquilerService.alquileres().filter((alquiler) => alquiler.estado === 'ACTIVO').length
+    () => this.alquilerService.alquileres().filter((alquiler) => alquiler.estado?.nombreEstado === 'ACTIVO').length
   );
+
+  ngOnInit(): void {
+    this.vehiculoService.cargar();
+    this.clienteService.cargar();
+    this.alquilerService.cargar();
+  }
 }

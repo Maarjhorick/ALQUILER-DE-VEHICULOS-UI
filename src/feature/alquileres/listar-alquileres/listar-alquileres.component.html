@@ -32,40 +32,35 @@
     <table mat-table [dataSource]="alquileresFiltrados()">
       <ng-container matColumnDef="cliente">
         <th mat-header-cell *matHeaderCellDef>Cliente</th>
-        <td mat-cell *matCellDef="let a">{{ a.clienteNombre }}</td>
+        <td mat-cell *matCellDef="let a">{{ a.cliente?.nombres }} {{ a.cliente?.apellidos }}</td>
       </ng-container>
 
       <ng-container matColumnDef="vehiculo">
         <th mat-header-cell *matHeaderCellDef>Vehículo</th>
         <td mat-cell *matCellDef="let a">
           <div class="vehiculo-cell">
-            <span class="vehiculo-icon"><mat-icon>directions_car</mat-icon></span>
-            {{ a.vehiculoNombre }}
+            <span class="vehiculo-icon" [style.background]="colorFondo(a.vehiculo?.color)"><mat-icon>{{ iconoPorTipo(a.vehiculo?.tipo?.nombreTipo) }}</mat-icon></span>
+            {{ a.vehiculo?.modelo?.marca?.nombreMarca }} {{ a.vehiculo?.modelo?.modelo }}
           </div>
         </td>
       </ng-container>
 
       <ng-container matColumnDef="fechas">
         <th mat-header-cell *matHeaderCellDef>Periodo</th>
-        <td mat-cell *matCellDef="let a">{{ a.fechaInicio }} → {{ a.fechaFin }}</td>
-      </ng-container>
-
-      <ng-container matColumnDef="total">
-        <th mat-header-cell *matHeaderCellDef>Total</th>
-        <td mat-cell *matCellDef="let a">S/ {{ a.total }}</td>
+        <td mat-cell *matCellDef="let a">{{ a.fechaInicio }} → {{ a.fechaFinEstimada }}</td>
       </ng-container>
 
       <ng-container matColumnDef="estado">
         <th mat-header-cell *matHeaderCellDef>Estado</th>
         <td mat-cell *matCellDef="let a">
-          <span class="badge" [ngClass]="claseEstado(a.estado)">{{ a.estado }}</span>
+          <span class="badge" [ngClass]="claseEstado(a.estado?.nombreEstado)">{{ a.estado?.nombreEstado }}</span>
         </td>
       </ng-container>
 
       <ng-container matColumnDef="acciones">
         <th mat-header-cell *matHeaderCellDef class="acciones-header">Acciones</th>
         <td mat-cell *matCellDef="let a" class="acciones-cell">
-          @if (a.estado === 'ACTIVO') {
+          @if (a.estado?.nombreEstado === 'ACTIVO') {
             <button mat-icon-button matTooltip="Finalizar" (click)="finalizar(a)">
               <mat-icon>check_circle</mat-icon>
             </button>
@@ -73,9 +68,6 @@
               <mat-icon>cancel</mat-icon>
             </button>
           }
-          <button mat-icon-button matTooltip="Eliminar" color="warn" (click)="eliminar(a)">
-            <mat-icon>delete</mat-icon>
-          </button>
         </td>
       </ng-container>
 
