@@ -1,13 +1,18 @@
-export type EstadoAlquiler = 'ACTIVO' | 'FINALIZADO' | 'CANCELADO';
+import { Cliente } from './cliente.model';
+import { Vehiculo } from './vehiculo.model';
+
+export interface EstadoAlquilerCatalogo {
+  idEstadoAlquiler: number;
+  nombreEstado: string;
+}
 
 export interface Alquiler {
-  id: number;
-  clienteId: number;
-  clienteNombre: string;
-  vehiculoId: number;
-  vehiculoNombre: string;
+  idAlquiler?: number;
+  cliente: Cliente;
+  vehiculo: Vehiculo;
+  fechaReserva?: string;
   fechaInicio: string;
-  fechaFin: string;
-  estado: EstadoAlquiler;
-  total: number;
+  fechaFinEstimada: string;
+  fechaFinReal?: string | null;
+  estado: EstadoAlquilerCatalogo;
 }

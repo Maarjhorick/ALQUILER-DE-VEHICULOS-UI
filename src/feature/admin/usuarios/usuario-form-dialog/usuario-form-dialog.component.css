@@ -1,0 +1,15 @@
+.usuario-dialog {
+  display: flex;
+  flex-direction: column;
+}
+
+.full {
+  width: 100%;
+}
+
+mat-dialog-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-top: 8px;
+}

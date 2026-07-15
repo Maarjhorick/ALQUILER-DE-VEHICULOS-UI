@@ -1,0 +1,173 @@
+<section class="page">
+  <app-back-button></app-back-button>
+  <div class="page-header">
+    <div>
+      <p class="eyebrow">Administración</p>
+      <h1>Catálogo base</h1>
+      <p class="description">Marcas, modelos, tipos de vehículo y combustibles disponibles para registrar flota.</p>
+    </div>
+  </div>
+
+  @if (!catalogos) {
+    <p class="vacio">Cargando catálogo...</p>
+  } @else {
+    <mat-tab-group class="tabs-card">
+
+      <!-- MARCAS -->
+      <mat-tab label="Marcas">
+        <div class="tab-content">
+          <div class="form-agregar">
+            <mat-form-field appearance="outline">
+              <mat-label>Nueva marca</mat-label>
+              <input matInput [(ngModel)]="nuevaMarca" placeholder="Ej: Suzuki" (keyup.enter)="agregarSimple('marca')">
+            </mat-form-field>
+            <button mat-flat-button color="primary" (click)="agregarSimple('marca')">
+              <mat-icon>add</mat-icon>
+              Agregar
+            </button>
+          </div>
+
+          <ul class="lista-catalogo">
+            @for (marca of catalogos.marcas; track marca.idMarca) {
+              <li>
+                @if (editandoSimple?.tipo === 'marca' && editandoSimple?.id === marca.idMarca) {
+                  <mat-form-field appearance="outline" class="edicion-field">
+                    <input matInput [(ngModel)]="editandoSimple!.valor" (keyup.enter)="guardarEdicionSimple()">
+                  </mat-form-field>
+                  <button mat-icon-button (click)="guardarEdicionSimple()"><mat-icon>check</mat-icon></button>
+                  <button mat-icon-button (click)="cancelarEdicionSimple()"><mat-icon>close</mat-icon></button>
+                } @else {
+                  <span>{{ marca.nombreMarca }}</span>
+                  <button mat-icon-button (click)="iniciarEdicionSimple('marca', marca.idMarca, marca.nombreMarca)">
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                }
+              </li>
+            }
+          </ul>
+        </div>
+      </mat-tab>
+
+      <!-- MODELOS -->
+      <mat-tab label="Modelos">
+        <div class="tab-content">
+          <div class="form-agregar">
+            <mat-form-field appearance="outline">
+              <mat-label>Nuevo modelo</mat-label>
+              <input matInput [(ngModel)]="nuevoModeloNombre" placeholder="Ej: Swift">
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Marca</mat-label>
+              <mat-select [(ngModel)]="nuevoModeloMarcaId">
+                @for (marca of catalogos.marcas; track marca.idMarca) {
+                  <mat-option [value]="marca.idMarca">{{ marca.nombreMarca }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+            <button mat-flat-button color="primary" (click)="agregarModelo()">
+              <mat-icon>add</mat-icon>
+              Agregar
+            </button>
+          </div>
+
+          <ul class="lista-catalogo">
+            @for (modelo of catalogos.modelos; track modelo.idModelo) {
+              <li>
+                @if (editandoModelo?.id === modelo.idModelo) {
+                  <mat-form-field appearance="outline" class="edicion-field">
+                    <input matInput [(ngModel)]="editandoModelo!.nombre" (keyup.enter)="guardarEdicionModelo()">
+                  </mat-form-field>
+                  <mat-form-field appearance="outline" class="edicion-field">
+                    <mat-select [(ngModel)]="editandoModelo!.idMarca">
+                      @for (marca of catalogos.marcas; track marca.idMarca) {
+                        <mat-option [value]="marca.idMarca">{{ marca.nombreMarca }}</mat-option>
+                      }
+                    </mat-select>
+                  </mat-form-field>
+                  <button mat-icon-button (click)="guardarEdicionModelo()"><mat-icon>check</mat-icon></button>
+                  <button mat-icon-button (click)="cancelarEdicionModelo()"><mat-icon>close</mat-icon></button>
+                } @else {
+                  <span>{{ modelo.modelo }} <span class="secundario">— {{ modelo.marca?.nombreMarca }}</span></span>
+                  <button mat-icon-button (click)="iniciarEdicionModelo(modelo.idModelo, modelo.modelo, modelo.marca.idMarca)">
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                }
+              </li>
+            }
+          </ul>
+        </div>
+      </mat-tab>
+
+      <!-- TIPOS DE VEHICULO -->
+      <mat-tab label="Tipos de vehículo">
+        <div class="tab-content">
+          <div class="form-agregar">
+            <mat-form-field appearance="outline">
+              <mat-label>Nuevo tipo</mat-label>
+              <input matInput [(ngModel)]="nuevoTipo" placeholder="Ej: CONVERTIBLE" (keyup.enter)="agregarSimple('tipo')">
+            </mat-form-field>
+            <button mat-flat-button color="primary" (click)="agregarSimple('tipo')">
+              <mat-icon>add</mat-icon>
+              Agregar
+            </button>
+          </div>
+
+          <ul class="lista-catalogo">
+            @for (tipo of catalogos.tiposVehiculo; track tipo.idTipo) {
+              <li>
+                @if (editandoSimple?.tipo === 'tipo' && editandoSimple?.id === tipo.idTipo) {
+                  <mat-form-field appearance="outline" class="edicion-field">
+                    <input matInput [(ngModel)]="editandoSimple!.valor" (keyup.enter)="guardarEdicionSimple()">
+                  </mat-form-field>
+                  <button mat-icon-button (click)="guardarEdicionSimple()"><mat-icon>check</mat-icon></button>
+                  <button mat-icon-button (click)="cancelarEdicionSimple()"><mat-icon>close</mat-icon></button>
+                } @else {
+                  <span>{{ tipo.nombreTipo }}</span>
+                  <button mat-icon-button (click)="iniciarEdicionSimple('tipo', tipo.idTipo, tipo.nombreTipo)">
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                }
+              </li>
+            }
+          </ul>
+        </div>
+      </mat-tab>
+
+      <!-- COMBUSTIBLES -->
+      <mat-tab label="Combustibles">
+        <div class="tab-content">
+          <div class="form-agregar">
+            <mat-form-field appearance="outline">
+              <mat-label>Nuevo combustible</mat-label>
+              <input matInput [(ngModel)]="nuevoCombustible" placeholder="Ej: GLP" (keyup.enter)="agregarSimple('combustible')">
+            </mat-form-field>
+            <button mat-flat-button color="primary" (click)="agregarSimple('combustible')">
+              <mat-icon>add</mat-icon>
+              Agregar
+            </button>
+          </div>
+
+          <ul class="lista-catalogo">
+            @for (combustible of catalogos.combustibles; track combustible.idCombustible) {
+              <li>
+                @if (editandoSimple?.tipo === 'combustible' && editandoSimple?.id === combustible.idCombustible) {
+                  <mat-form-field appearance="outline" class="edicion-field">
+                    <input matInput [(ngModel)]="editandoSimple!.valor" (keyup.enter)="guardarEdicionSimple()">
+                  </mat-form-field>
+                  <button mat-icon-button (click)="guardarEdicionSimple()"><mat-icon>check</mat-icon></button>
+                  <button mat-icon-button (click)="cancelarEdicionSimple()"><mat-icon>close</mat-icon></button>
+                } @else {
+                  <span>{{ combustible.nombreCombustible }}</span>
+                  <button mat-icon-button (click)="iniciarEdicionSimple('combustible', combustible.idCombustible, combustible.nombreCombustible)">
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                }
+              </li>
+            }
+          </ul>
+        </div>
+      </mat-tab>
+
+    </mat-tab-group>
+  }
+</section>

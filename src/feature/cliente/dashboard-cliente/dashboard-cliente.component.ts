@@ -23,6 +23,6 @@ export class DashboardClienteComponent {
     () => this.vehiculoService.vehiculos().filter((v) => v.estado?.nombreEstado === 'DISPONIBLE').length
   );
   readonly reservasActivas = computed(
-    () => this.alquilerService.alquileres().filter((alquiler) => alquiler.estado === 'ACTIVO').length
+    () => this.alquilerService.alquileres().filter((alquiler) => alquiler.estado?.nombreEstado === 'ACTIVO').length
   );
 }

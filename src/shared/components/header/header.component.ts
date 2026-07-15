@@ -28,8 +28,6 @@ export class HeaderComponent {
   readonly authService = inject(AuthService);
   private readonly router = inject(Router);
 
-  // La página de inicio siempre mostrara el header público,
-  // sin importar si el usuario ya inició sesión.
   private readonly urlActual = toSignal(
     this.router.events.pipe(
       filter((evento): evento is NavigationEnd => evento instanceof NavigationEnd),
@@ -45,8 +43,6 @@ export class HeaderComponent {
     () => this.authService.estaAutenticado() && !this.esPaginaInicio()
   );
 
-  // Al hacer click en el logo: si hay sesión activa, se cierra y se va al inicio
-  // ya como usuario público. Si no hay sesión, simplemente navega al inicio.
   irAInicio(): void {
     if (this.authService.estaAutenticado()) {
       this.authService.logout('/');

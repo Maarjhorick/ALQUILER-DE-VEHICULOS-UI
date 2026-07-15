@@ -1,59 +1,86 @@
-# AlquilerVehiculosUi
+# Paul Car's — Frontend (Angular)
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.11.
+Interfaz web del sistema de alquiler de vehículos **Paul Car's**: catálogo público de vehículos, reservas, y paneles internos para empleados y administradores.
 
-## Development server
+## Tecnologías
 
-To start a local development server, run:
+- Angular 19 (standalone components, signals)
+- Angular Material
+- TypeScript
+- RxJS
+
+## Requisitos previos
+
+- Node.js 20 o superior
+- npm
+- El [backend](../alquiler_de_vehiculos) corriendo en `http://localhost:8080` (ver su propio README para levantarlo)
+
+## Instalación
+
+```bash
+npm install
+```
+
+## Configuración de entornos
+
+Las URLs del backend salen de `src/environments/`, no están escritas a mano en cada servicio:
+
+- `src/environments/environment.ts` → usado en desarrollo (`apiUrl: 'http://localhost:8080/api'`)
+- `src/environments/environment.prod.ts` → usado al compilar con `--configuration production`
+
+Si tu backend corre en otra URL o puerto, solo cambia `apiUrl` en el archivo correspondiente.
+
+## Levantar en desarrollo
 
 ```bash
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Abre `http://localhost:4200/`. La app recarga sola al guardar cambios.
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## Compilar para producción
 
 ```bash
-ng generate component component-name
+ng build --configuration production
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Los archivos compilados quedan en `dist/alquiler-vehiculos-ui/`, ya usando `environment.prod.ts`.
 
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+## Correr pruebas
 
 ```bash
 ng test
 ```
 
-## Running end-to-end tests
+## Usuarios de prueba
 
-For end-to-end (e2e) testing, run:
+| Usuario | Rol | Acceso |
+|---|---|---|
+| (el primero que se registre por `/solicitar-cuenta`) | ADMIN | Panel completo (`/admin`) |
+| Empleados creados desde `/admin/usuarios` | EMPLEADO | Panel operativo (`/empleado`) |
 
-```bash
-ng e2e
+## Estructura del proyecto
+
+```
+src/
+├── app/            # Configuración raíz y rutas
+├── core/           # Guards, interceptores, modelos y servicios compartidos
+├── feature/        # Un subdirectorio por módulo funcional
+│   ├── admin/          # Dashboard admin, usuarios, reportes, catálogo base
+│   ├── alquileres/     # Listado y formulario de alquileres
+│   ├── auth/            # Login, solicitud de cuenta
+│   ├── catalogo/        # Catálogo público de vehículos
+│   ├── clientes/        # Gestión de clientes
+│   ├── empleado/        # Dashboard de empleado
+│   ├── reservas/        # Flujo público de reserva
+│   └── vehiculos/       # Gestión de vehículos
+├── layouts/        # Layout principal (header + footer)
+├── shared/         # Componentes reutilizables (confirmación, back-button, etc.)
+└── environments/   # Configuración por entorno (dev/prod)
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+## Roles y accesos
 
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- **Público / no autenticado:** home, catálogo, nosotros, contacto, reservar.
+- **EMPLEADO:** Vehículos, Clientes, Alquileres (crear y editar; no puede eliminar).
+- **ADMIN:** todo lo anterior, más eliminar registros, y el panel `/admin` (usuarios, reportes, catálogo base).

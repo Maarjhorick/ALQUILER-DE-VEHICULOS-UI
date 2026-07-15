@@ -1,4 +1,5 @@
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 import { Injectable, inject, signal } from '@angular/core';
 import { Observable, tap } from 'rxjs';
 
@@ -9,7 +10,7 @@ import { Vehiculo } from '../models/vehiculo.model';
 })
 export class VehiculoService {
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = 'http://localhost:8080/api/vehiculos';
+  private readonly apiUrl = `${environment.apiUrl}/vehiculos`;
 
   private readonly vehiculosSignal = signal<Vehiculo[]>([]);
   readonly vehiculos = this.vehiculosSignal.asReadonly();
@@ -20,6 +21,9 @@ export class VehiculoService {
       error: (err) => console.error('Error cargando vehículos:', err)
     });
   }
+  listarTodos(): Observable<Vehiculo[]> {
+  return this.http.get<Vehiculo[]>(this.apiUrl);
+}
 
   agregar(vehiculo: Vehiculo): Observable<Vehiculo> {
     return this.http.post<Vehiculo>(this.apiUrl, vehiculo).pipe(
@@ -38,13 +42,4 @@ export class VehiculoService {
       tap(() => this.cargar())
     );
   }
-
-  // TODO: temporal — cuando conectemos AlquilerService al backend real,
-// este cambio de estado debe venir del propio backend (al crear/finalizar
-// un alquiler), no desde el frontend llamando esto manualmente.
-cambiarEstado(idVehiculo: number, nombreEstado: string): void {
-  console.warn(
-    `cambiarEstado('${nombreEstado}') para el vehículo ${idVehiculo} es temporal y no persiste en la BD todavía.`
-  );
-}
 }

@@ -1,4 +1,5 @@
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoginRequest, LoginResponse, UsuarioSesion } from '../models/auth.models';
@@ -11,7 +12,7 @@ export class AuthService {
   private readonly http = inject(HttpClient);
   private readonly router = inject(Router);
 
-  private readonly apiUrl = 'http://localhost:8080/api/auth';
+  private readonly apiUrl = `${environment.apiUrl}/auth`;
   private readonly tokenKey = 'paulcars_token';
   private readonly userKey = 'paulcars_user';
 
@@ -45,7 +46,6 @@ export class AuthService {
 
   private guardarSesion(response: LoginResponse): void {
     localStorage.setItem(this.tokenKey, response.token);
-    // Support responses that include a usuario object or separate username/rol fields
     const usuario: UsuarioSesion = (response as any).usuario ?? { username: (response as any).username, rol: (response as any).rol };
     localStorage.setItem(this.userKey, JSON.stringify(usuario));
     this.usuarioSignal.set(usuario);

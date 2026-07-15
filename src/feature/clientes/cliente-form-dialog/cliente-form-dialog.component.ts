@@ -5,6 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 
 import { Cliente } from '../../../core/models/cliente.model';
 
@@ -19,7 +20,8 @@ export interface ClienteDialogData {
     MatDialogModule,
     MatButtonModule,
     MatFormFieldModule,
-    MatInputModule
+    MatInputModule,
+    MatSelectModule
   ],
   templateUrl: './cliente-form-dialog.component.html',
   styleUrl: './cliente-form-dialog.component.css'
@@ -34,8 +36,9 @@ export class ClienteFormDialogComponent {
   form = this.fb.nonNullable.group({
     nombres: [this.data?.cliente?.nombres ?? '', [Validators.required, Validators.minLength(2)]],
     apellidos: [this.data?.cliente?.apellidos ?? '', [Validators.required, Validators.minLength(2)]],
-    dni: [
-      this.data?.cliente?.dni ?? '',
+    tipoDocumento: [this.data?.cliente?.tipoDocumento ?? 'DNI', [Validators.required]],
+    numeroDocumento: [
+      this.data?.cliente?.numeroDocumento ?? '',
       [Validators.required, Validators.pattern(/^\d{8}$/)]
     ],
     email: [this.data?.cliente?.email ?? '', [Validators.required, Validators.email]],
@@ -43,7 +46,7 @@ export class ClienteFormDialogComponent {
       this.data?.cliente?.telefono ?? '',
       [Validators.required, Validators.pattern(/^\d{9}$/)]
     ],
-    direccion: [this.data?.cliente?.direccion ?? '', [Validators.required]]
+    licenciaConducir: [this.data?.cliente?.licenciaConducir ?? '', [Validators.required]]
   });
 
   guardar(): void {

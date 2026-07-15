@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -10,6 +10,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { Cliente } from '../../../core/models/cliente.model';
+import { AuthService } from '../../../core/service/auth.service';
 import { ClienteService } from '../../../core/service/cliente.service';
 import {
   ConfirmDialogComponent,
@@ -34,12 +35,15 @@ import { BackButtonComponent } from '../../../shared/components/back-button/back
   templateUrl: './listar-clientes.component.html',
   styleUrl: './listar-clientes.component.css'
 })
-export class ListarClientesComponent {
+export class ListarClientesComponent implements OnInit {
   private readonly clienteService = inject(ClienteService);
   private readonly dialog = inject(MatDialog);
   private readonly snackBar = inject(MatSnackBar);
+  private readonly authService = inject(AuthService);
 
-  readonly columnas = ['cliente', 'dni', 'contacto', 'direccion', 'acciones'];
+  readonly esAdmin = computed(() => this.authService.rolActual() === 'ADMIN');
+
+  readonly columnas = ['cliente', 'documento', 'contacto', 'licencia', 'acciones'];
 
   readonly busqueda = signal('');
   readonly clientes = this.clienteService.clientes;
@@ -50,9 +54,13 @@ export class ListarClientesComponent {
     if (!texto) return this.clientes();
 
     return this.clientes().filter((c) =>
-      `${c.nombres} ${c.apellidos} ${c.dni} ${c.email}`.toLowerCase().includes(texto)
+      `${c.nombres} ${c.apellidos} ${c.numeroDocumento} ${c.email}`.toLowerCase().includes(texto)
     );
   });
+
+  ngOnInit(): void {
+    this.clienteService.cargar();
+  }
 
   buscar(valor: string): void {
     this.busqueda.set(valor);
@@ -67,8 +75,9 @@ export class ListarClientesComponent {
     ref.afterClosed().subscribe((resultado) => {
       if (!resultado) return;
 
-      this.clienteService.agregar(resultado).subscribe(() => {
-        this.snackBar.open('Cliente registrado correctamente', 'Cerrar', { duration: 2500 });
+      this.clienteService.agregar(resultado).subscribe({
+        next: () => this.snackBar.open('Cliente registrado correctamente', 'Cerrar', { duration: 2500 }),
+        error: (err) => this.mostrarError(err, 'registrar')
       });
     });
   }
@@ -82,8 +91,9 @@ export class ListarClientesComponent {
     ref.afterClosed().subscribe((resultado) => {
       if (!resultado) return;
 
-      this.clienteService.actualizar(cliente.id, resultado).subscribe(() => {
-        this.snackBar.open('Cliente actualizado correctamente', 'Cerrar', { duration: 2500 });
+      this.clienteService.actualizar(cliente.idCliente!, resultado).subscribe({
+        next: () => this.snackBar.open('Cliente actualizado correctamente', 'Cerrar', { duration: 2500 }),
+        error: (err) => this.mostrarError(err, 'actualizar')
       });
     });
   }
@@ -99,13 +109,19 @@ export class ListarClientesComponent {
     ref.afterClosed().subscribe((confirmado) => {
       if (!confirmado) return;
 
-      this.clienteService.eliminar(cliente.id).subscribe(() => {
-        this.snackBar.open('Cliente eliminado', 'Cerrar', { duration: 2500 });
+      this.clienteService.eliminar(cliente.idCliente!).subscribe({
+        next: () => this.snackBar.open('Cliente eliminado', 'Cerrar', { duration: 2500 }),
+        error: (err) => this.mostrarError(err, 'eliminar')
       });
     });
   }
 
   iniciales(cliente: Cliente): string {
     return `${cliente.nombres.charAt(0)}${cliente.apellidos.charAt(0)}`.toUpperCase();
+  }
+
+  private mostrarError(err: any, accion: string): void {
+    const mensaje = err?.error?.message || err?.error || `No se pudo ${accion} el cliente.`;
+    this.snackBar.open(typeof mensaje === 'string' ? mensaje : `No se pudo ${accion} el cliente.`, 'Cerrar', { duration: 3500 });
   }
 }
